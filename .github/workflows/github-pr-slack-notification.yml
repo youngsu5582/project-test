@@ -2,7 +2,7 @@ name: send slack mention message to requested reviewer
 
 on:
   pull_request:
-    types: [pull_request_review_requested]
+    types: [pull_request_review_requested,review_requested]
 
 env:
   youngsu5582: "U07BH9G42AV"
