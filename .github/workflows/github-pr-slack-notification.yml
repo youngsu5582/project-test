@@ -23,15 +23,7 @@ jobs:
       - name: Set reviewers and sender variables
         id: set-vars
         run: |
-          reviewers=$(jq -r '.requested_reviewers[].login' <<< "${{ toJson(github.event) }}")
-          mentions=""
-          for reviewer in $reviewers; do
-            slack_id=${{ env[reviewer] }}
-            if [ -n "$slack_id" ]; then
-              mentions+=" <@$slack_id> \t"
-            fi
-          done
-          echo "REVIEWER_SLACK_IDS=$mentions" >> $GITHUB_ENV
+          echo "REVIEWER_SLACK_ID=${{ env[github.event.requested_reviewer.login] }}" >> $GITHUB_ENV
           echo "SENDER_SLACK_ID=${{ env.github.event.sender.login }}" >> $GITHUB_ENV
 
       - name: pr reviewer 되면 slack 알림 보냄
@@ -46,7 +38,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "<@${{ env.SENDER_SLACK_ID }}>가 \n ${{ env.REVIEWER_SLACK_IDS }} 들에게 리뷰 요청을 했어요🚀🚀"
+                    "text": "<@${{ env.SENDER_SLACK_ID }}>가 \n ${{ env.REVIEWER_SLACK_ID }} 에게 리뷰 요청을 했어요🚀🚀"
                   }
                 }
               ],
