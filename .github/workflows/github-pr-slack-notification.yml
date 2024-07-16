@@ -6,6 +6,7 @@ on:
       - develop
     types:
       - review_requested
+
 env:
   youngsu5582: "U07BH9G42AV"
   jcoding-play: "U07B4G18CUT"
@@ -14,6 +15,7 @@ env:
   chlwlstlf: "U07B4GB6V5H"
   00kang: "U07B1NHUA69"
   pp449: "U07B1NH5LBX"
+
 jobs:
   specific_review_requested:
     runs-on: ubuntu-latest
@@ -21,16 +23,16 @@ jobs:
       - name: Set reviewers and sender variables
         id: set-vars
         run: |
-          reviewers=$(jq -r '.requested_reviewers[].login' <<< "${{ toJSON(github.event) }}")
+          reviewers=$(jq -r '.requested_reviewers[].login' <<< "${{ toJson(github.event) }}")
           mentions=""
           for reviewer in $reviewers; do
-           slack_id=${{ env[reviewer] }}
-           if [ -n "$slack_id" ]; then
-             mentions+=" <@$slack_id>"
-           fi
+            slack_id=${{ env[reviewer] }}
+            if [ -n "$slack_id" ]; then
+              mentions+=" <@$slack_id> \t"
+            fi
           done
           echo "REVIEWER_SLACK_IDS=$mentions" >> $GITHUB_ENV
-          echo "SENDER_SLACK_ID=${{ env[github.event.sender.login] }}" >> $GITHUB_ENV
+          echo "SENDER_SLACK_ID=${{ env.github.event.sender.login }}" >> $GITHUB_ENV
 
       - name: pr reviewer 되면 slack 알림 보냄
         uses: slackapi/slack-github-action@v1.24.0
@@ -38,7 +40,7 @@ jobs:
           channel-id: ${{ secrets.REVIEW_MENTION_CHANNEL_ID }}
           payload: |
             {
-              "text": "pr review request",
+              "text": "PR review request",
               "blocks": [
                 {
                   "type": "section",
@@ -49,15 +51,15 @@ jobs:
                 }
               ],
               "attachments": [
-              {
+                {
                   "fallback": "[CoReA] New Pull Request",
                   "color": "#00E000",
-                  "author_name": "${{github.event.sender.login}}",
+                  "author_name": "${{ github.event.sender.login }}",
                   "title": "${{ github.event.pull_request.title }}",
-                  "title_link": "${{github.event.pull_request.html_url}}",
-                  "text": "${{github.event.pull_request.body}}",
+                  "title_link": "${{ github.event.pull_request.html_url }}",
+                  "text": "${{ github.event.pull_request.body }}",
                   "short": true
-              }
+                }
               ]
             }
         env:
