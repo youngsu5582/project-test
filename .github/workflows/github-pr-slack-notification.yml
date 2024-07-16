@@ -1,9 +1,11 @@
 name: send slack mention message to requested reviewer
-
 on:
   pull_request:
-    types: [pull_request_review_requested,review_requested]
-
+    branches:
+      - main
+      - develop
+    types:
+      - review_requested
 env:
   youngsu5582: "U07BH9G42AV"
   jcoding-play: "U07B4G18CUT"
@@ -12,7 +14,6 @@ env:
   chlwlstlf: "U07B4GB6V5H"
   00kang: "U07B1NHUA69"
   pp449: "U07B1NH5LBX"
-
 jobs:
   specific_review_requested:
     runs-on: ubuntu-latest
@@ -30,7 +31,6 @@ jobs:
           done
           echo "REVIEWER_SLACK_IDS=$mentions" >> $GITHUB_ENV
           echo "SENDER_SLACK_ID=${{ env[github.event.sender.login] }}" >> $GITHUB_ENV
-
 
       - name: pr reviewer 되면 slack 알림 보냄
         uses: slackapi/slack-github-action@v1.24.0
