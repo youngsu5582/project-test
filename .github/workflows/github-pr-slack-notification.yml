@@ -24,7 +24,7 @@ jobs:
         id: set-vars
         run: |
           echo "REVIEWER_SLACK_ID=${{ env[github.event.requested_reviewer.login] }}" >> $GITHUB_ENV
-          echo "SENDER_SLACK_ID=${{ env.github.event.pull_request.user.login }}" >> $GITHUB_ENV
+          echo "SENDER_SLACK_ID=${{ env[github.event.pull_request.user.login] }}" >> $GITHUB_ENV
 
       - name: pr reviewer 되면 slack 알림 보냄
         uses: slackapi/slack-github-action@v1.24.0
@@ -47,7 +47,7 @@ jobs:
                 {
                   "fallback": "[CoReA] New Pull Request",
                   "color": "#00E000",
-                  "author_name": "${{ github.event.sender.login }}",
+                  "author_name": "${{ github.event.pull_request.user.login }}",
                   "title": "${{ github.event.pull_request.title }}",
                   "title_link": "${{ github.event.pull_request.html_url }}",
                   "text": "${{ github.event.pull_request.body }}",
