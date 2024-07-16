@@ -24,7 +24,7 @@ jobs:
         id: set-vars
         run: |
           echo "REVIEWER_SLACK_ID=${{ env[github.event.requested_reviewer.login] }}" >> $GITHUB_ENV
-          echo "SENDER_SLACK_ID=${{ env.github.event.sender.login }}" >> $GITHUB_ENV
+          echo "SENDER_SLACK_ID=${{ env.github.event.pull_request.user.login }}" >> $GITHUB_ENV
 
       - name: pr reviewer 되면 slack 알림 보냄
         uses: slackapi/slack-github-action@v1.24.0
