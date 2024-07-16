@@ -29,7 +29,7 @@ jobs:
            fi
           done
           echo "REVIEWER_SLACK_IDS=$mentions" >> $GITHUB_ENV
-          echo "SENDER_SLACK_ID=${{ env[github.event.sender.login] }}" >> $GITHUB_ENV
+          echo "SENDER_SLACK_ID=${{ env[github.event.pull_request.user.login] }}" >> $GITHUB_ENV
 
 
       - name: pr reviewer 되면 slack 알림 보냄
