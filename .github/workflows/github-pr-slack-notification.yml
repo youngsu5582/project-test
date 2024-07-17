@@ -39,7 +39,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "<@${{ env.SENDER_SLACK_ID }}>가 \n ${{ env.REVIEWER_SLACK_ID }} 에게 리뷰 요청을 했어요🚀🚀"
+                    "text": "<@${{ env.SENDER_SLACK_ID }}>가 \n <@${{ env.REVIEWER_SLACK_ID }}> 에게 리뷰 요청을 했어요🚀🚀"
                   }
                 }
               ],
