@@ -24,8 +24,7 @@ jobs:
         id: set-vars
         run: |
           mentions=""
-          reviewers=$(jq -r '.requested_reviewers[].login' <<< "${{ toJSON(github.event.pull_request) }}")
-          for reviewer in $reviewers; do
+          for reviewer in ${{toJSON(github.event.pull_request.requested_reviewers)}}; do
             slack_id=${{ env[reviewer.login] }}
             if [ -n "$slack_id" ]; then
               mentions+=" <@$slack_id>"
