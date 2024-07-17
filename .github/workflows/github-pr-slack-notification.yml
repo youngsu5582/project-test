@@ -33,7 +33,7 @@ jobs:
         run: |
           mentions=""
           for reviewer in ${{env.requested_reviewers}}; do
-            echo "REVIEWER=env[${reviewer}]"
+            echo "REVIEWER=${{env[${reviewer}]}}"
             if [ -n "$slack_id" ]; then
               mentions+=" <@$slack_id>"
             fi
