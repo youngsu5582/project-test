@@ -18,13 +18,21 @@ env:
 
 jobs:
   specific_review_requested:
+  
     runs-on: ubuntu-latest
-    steps:
+
+    steps:  
+      - name: Set up GitHub context
+        id: context
+        run: |
+          echo "requested_reviewers=$(jq -r '.requested_reviewers | map(.login) | @sh' <<< '${{ toJSON(github.event.pull_request) }}')" >> $GITHUB_ENV
+
+
       - name: Set reviewers and sender variables
         id: set-vars
         run: |
           mentions=""
-          for reviewer in ${{toJSON(github.event.pull_request.requested_reviewers)}}; do
+          for reviewer in ${{env.requested_reviewers)}}; do
             slack_id=${{ env[reviewer.login] }}
             if [ -n "$slack_id" ]; then
               mentions+=" <@$slack_id>"
