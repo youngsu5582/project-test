@@ -77,7 +77,7 @@ jobs:
       - name: Create Pull Request
         run: |
           pr_number=$(gh pr create --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "${{ env.LABELS }}" | xargs gh pr view --json number -q .number)
-          echo "PR_NUMBER=pr_number" >> $GITHUB_ENV
+          echo "PR_NUMBER=$pr_number" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ github.token }}
 
