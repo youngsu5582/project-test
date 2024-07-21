@@ -6,7 +6,7 @@ on:
       - 'feat/#*'
 
 jobs:
-  get-issue-info:
+  createPullRequest:
     runs-on: ubuntu-latest
 
     steps:
@@ -64,13 +64,16 @@ jobs:
           echo "BRNACH : ${{ env.BRANCH_NAME }}"
           
       - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v6
-        with:
-          commit-message: "PR 자동 생성"
-          title: ${{ env.PR_TITLE }}
-          labels: ${{ env.LABELS }}
-          assignees: ${{ env.ASSIGNEES }}
-          body: ${{ env.PR_BODY }}
-          base: develop
-          branch: ${{ env.BRANCH_NAME }}
+        run: |
+          gh_pr_up() { gh pr create $* || gh pr edit $* }
+          gh_pr_up --title ${{ env.PR_TITLE }} --body ${{ env.PR_BODY }} --base develop --label ${{ env.LABELS }}
+#        id: cpr
+#        uses: peter-evans/create-pull-request@v6
+#        with:
+#          commit-message: "PR 자동 생성"
+#          title: ${{ env.PR_TITLE }}
+#          labels: ${{ env.LABELS }}
+#          assignees: ${{ env.ASSIGNEES }}
+#          body: ${{ env.PR_BODY }}
+#          base: develop
+#          branch: ${{ env.BRANCH_NAME }}
