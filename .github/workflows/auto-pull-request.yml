@@ -1,4 +1,4 @@
-name: Fetch Issue Info
+name: Auto Pull Request
 
 on:
   push:
