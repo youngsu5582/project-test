@@ -12,6 +12,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: develop
+
+      - name: Fetch feat/#33 branch
+        run: |
+          git fetch origin ${GITHUB_REF#refs/heads/}:${GITHUB_REF#refs/heads/}
 
       - name: Extract Issue Number
         id: extract
