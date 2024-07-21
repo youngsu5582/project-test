@@ -51,11 +51,12 @@ jobs:
         id: generate-body
         run: |
           issue_number="${{ env.ISSUE_NUMBER }}"
-          pr_body=$(cat <<EOF
-      ## 📌 관련 이슈
-
-      EOF
-          )
+          pr_body=""
+          pr_body+="## 📌 관련 이슈\n"
+          pr_body+="- closed: #${issue_number}\n"
+          pr_body+="\n## ✨ PR 세부 내용\n"
+          pr_body+="<!-- 수정/추가한 내용을 적어주세요. -->\n"
+          
           echo "PR_BODY=$pr_body" >> $GITHUB_ENV
 
       - name: Display Issue Info
