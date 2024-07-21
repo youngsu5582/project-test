@@ -1,0 +1,65 @@
+name: Fetch Issue Info
+
+on:
+  push:
+    branches:
+      - 'feat/*'
+
+jobs:
+  get-issue-info:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Extract Issue Number
+        id: extract
+        run: |
+          branch_name="${GITHUB_REF#refs/heads/}"
+          echo "Branch Name: $branch_name"
+          if [[ "$branch_name" =~ ^feat/([0-9]+)$ ]]; then
+            issue_number="${BASH_REMATCH[1]}"
+            echo "Issue Number: $issue_number"
+            echo "ISSUE_NUMBER=$issue_number" >> $GITHUB_ENV
+          else
+            echo "Branch name does not match pattern."
+            exit 1
+          fi
+
+      - name: Fetch Issue Details
+        run: |
+          issue_number="${{ env.ISSUE_NUMBER }}"
+          echo "Fetching details for issue #$issue_number"
+          
+          # Fetch issue details using GitHub API
+          response=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                            -H "Accept: application/vnd.github.v3+json" \
+                            "https://api.github.com/repos/${{ github.repository }}/issues/$issue_number")
+          
+          # Extract issue details
+          title=$(echo "$response" | jq -r '.title')
+          assignees=$(echo "$response" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//')
+
+          # Extract labels
+          labels=$(echo "$response" | jq -r '.labels[].name' | tr '\n' ', ' | sed 's/, $//')
+
+          # Check for specific labels
+          has_backend=$(echo "$labels" | grep -q '백엔드' && echo 'true' || echo 'false')
+          has_frontend=$(echo "$labels" | grep -q '프론트엔드' && echo 'true' || echo 'false')
+
+          echo "Title: $title"
+          echo "Assignees: $assignees"
+          echo "Labels: $labels"
+          echo "HAS_BACKEND=$has_backend" >> $GITHUB_ENV
+          echo "HAS_FRONTEND=$has_frontend" >> $GITHUB_ENV
+          echo "TITLE=$title" >> $GITHUB_ENV
+          echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
+
+      - name: Display Issue Info
+        run: |
+          echo "Issue Title: ${{ env.TITLE }}"
+          echo "Issue Assignees: ${{ env.ASSIGNEES }}"
+          echo "Labels: ${{ env.LABELS }}"
+          echo "Has Backend Label: ${{ env.HAS_BACKEND }}"
+          echo "Has Frontend Label: ${{ env.HAS_FRONTEND }}"
