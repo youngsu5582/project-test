@@ -87,6 +87,9 @@ jobs:
           for LABEL in "${LABEL_ARRAY[@]}"; do
             gh pr edit "${{ env.PR_NUMBER }}" --add-label "$LABEL"
           done
+        env:
+          GH_TOKEN: ${{ github.token }}
+          
 
 #        id: cpr
 #        uses: peter-evans/create-pull-request@v6
