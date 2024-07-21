@@ -50,4 +50,4 @@ jobs:
           echo "Issue Title: ${{ env.TITLE }}"
           echo "Issue Assignees: ${{ env.ASSIGNEES }}"
           echo "Labels: ${{ env.LABELS }}"
-          echo "PR TITLE: ${{ env.LABELS }}"
+          echo "PR TITLE: ${{ env.PR_TITLE }}"
