@@ -26,6 +26,16 @@ jobs:
             exit 1
           fi
 
+      - name: Check for Existing Pull Request
+        id: check_pr
+        run: |
+          existing_pr=$(gh pr list --search "${{ env.BRANCH_NAME }}" --json number -q '.[] | .number')
+          if [ -n "$existing_pr" ]; then
+            echo "PR already exists: $existing_pr"
+            echo "EXISTING_PR=$existing_pr" >> $GITHUB_ENV
+            exit 0
+          fi
+
       - name: Fetch Issue Details
         run: |
           issue_number="${{ env.ISSUE_NUMBER }}"
