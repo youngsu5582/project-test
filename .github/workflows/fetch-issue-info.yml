@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Extract Issue Number
         id: extract
@@ -73,4 +73,4 @@ jobs:
           body: ${{ env.PR_BODY }}
           base: develop
           branch: ${{ env.BRANCH_NAME }}
-
+          author: ${{ github.actor }}
