@@ -73,4 +73,3 @@ jobs:
           body: ${{ env.PR_BODY }}
           base: develop
           branch: ${{ env.BRANCH_NAME }}
-          author: ${{ github.actor }}
