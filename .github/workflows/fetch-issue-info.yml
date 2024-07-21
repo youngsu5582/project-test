@@ -39,7 +39,6 @@ jobs:
           title=$(echo "$response" | jq -r '.title')
           assignees=$(echo "$response" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//')
           labels=$(echo "$response" | jq -r '.labels[].name' | tr '\n' ', ' | sed 's/, $//')
-
           echo "LABELS=$labels" >> $GITHUB_ENV
           echo "TITLE=$title" >> $GITHUB_ENV
           echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
@@ -52,48 +51,38 @@ jobs:
         run: |
           issue_number="${{ env.ISSUE_NUMBER }}"
           
+          # Create PR body using Here Document
           cat <<EOF > pr_body.txt
-## 📌 관련 이슈
+  ## 📌 관련 이슈
 
-- closed: #${issue_number}
+  - closed: #${issue_number}
 
 ## ✨ PR 세부 내용
 
-<!-- 수정/추가한 내용을 적어주세요. -->
-EOF
-          pr_body=$(cat pr_body.txt)
-          echo "PR_BODY=${pr_body}" >> $GITHUB_ENV
-          echo "PR_BODY=$pr_body" >> $GITHUB_ENV
+  <!-- 수정/추가한 내용을 적어주세요. -->
+  EOF
+  
+  # Read the content into an environment variable
+  pr_body=$(cat pr_body.txt)
+  echo "PR_BODY=${pr_body}" >> $GITHUB_ENV
 
-      - name: Display Issue Info
-        run: |
-          echo "Issue Title: ${{ env.TITLE }}"
-          echo "Issue Assignees: ${{ env.ASSIGNEES }}"
-          echo "Labels: ${{ env.LABELS }}"
-          echo "PR TITLE: ${{ env.PR_TITLE }}"
-          echo "PR BODY: ${{ env.PR_BODY }}"
-          echo "BRNACH : ${{ env.BRANCH_NAME }}"
+- name: Display Issue Info
+  run: |
+    echo "Issue Title: ${{ env.TITLE }}"
+    echo "Issue Assignees: ${{ env.ASSIGNEES }}"
+    echo "Labels: ${{ env.LABELS }}"
+    echo "PR TITLE: ${{ env.PR_TITLE }}"
+    echo "PR BODY: ${{ env.PR_BODY }}"
+    echo "BRANCH : ${{ env.BRANCH_NAME }}"
 
-      - name: Create Pull Request
-        run: |
-          PR_NUMBER=$(gh pr create --base main --head feature-branch --title "Add new feature" --body "This pull request adds a new feature." --json number -q .number)
-          echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+- name: Create Pull Request
+  run: |
+    PR_NUMBER=$(gh pr create --base main --head feature-branch --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --json number -q .number)
+    echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+  env:
+    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-        env:
-          GH_TOKEN: ${{ github.token }}
-
-      - name: Add Labels to Pull Request
-        run: |
-          # Add labels to the newly created pull request
-          gh pr edit ${{ env.PR_NUMBER }} --add-labels ${{ env.LABELS }}
-
-#        id: cpr
-#        uses: peter-evans/create-pull-request@v6
-#        with:
-#          commit-message: "PR 자동 생성"
-#          title: ${{ env.PR_TITLE }}
-#          labels: ${{ env.LABELS }}
-#          assignees: ${{ env.ASSIGNEES }}
-#          body: ${{ env.PR_BODY }}
-#          base: develop
-#          branch: ${{ env.BRANCH_NAME }}
+- name: Add Labels to Pull Request
+  run: |
+    # Add labels to the newly created pull request
+    gh pr edit ${{ env.PR_NUMBER }} --add-labels ${{ env.LABELS }}
