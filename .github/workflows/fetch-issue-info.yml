@@ -42,7 +42,7 @@ jobs:
           echo "TITLE=$title" >> $GITHUB_ENV
           echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
           
-          pr_title="feat: ${title}(${issue_number})
+          pr_title="feat: ${title}(${issue_number})"
           echo "PR_TITLE=$pr_title" >> $GITHUB_ENV
 
       - name: Display Issue Info
