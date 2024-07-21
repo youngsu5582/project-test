@@ -1,9 +1,9 @@
-name: Auto Pull Request
+name: Auto Create Pull Request
 
 on:
   push:
     branches:
-      - 'feat/*'
+      - 'feat/#*'
 
 jobs:
   auto-pull-request:
@@ -11,26 +11,24 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Extract Issue Number
         id: extract
         run: |
           branch_name="${GITHUB_REF#refs/heads/}"
-          echo "Branch Name: $branch_name"
+          echo "BRANCH_NAME=$branch_name" >> $GITHUB_ENV
+          
           if [[ "$branch_name" =~ ^feat/#([0-9]+)$ ]]; then
             issue_number="${BASH_REMATCH[1]}"
-            echo "Issue Number: $issue_number"
             echo "ISSUE_NUMBER=$issue_number" >> $GITHUB_ENV
           else
-            echo "Branch name does not match pattern."
             exit 1
           fi
 
       - name: Fetch Issue Details
         run: |
           issue_number="${{ env.ISSUE_NUMBER }}"
-          echo "Fetching details for issue #$issue_number"
           
           # Fetch issue details using GitHub API
           response=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -40,26 +38,66 @@ jobs:
           # Extract issue details
           title=$(echo "$response" | jq -r '.title')
           assignees=$(echo "$response" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//')
-
-          # Extract labels
           labels=$(echo "$response" | jq -r '.labels[].name' | tr '\n' ', ' | sed 's/, $//')
 
-          # Check for specific labels
-          has_backend=$(echo "$labels" | grep -q '백엔드' && echo 'true' || echo 'false')
-          has_frontend=$(echo "$labels" | grep -q '프론트엔드' && echo 'true' || echo 'false')
-
-          echo "Title: $title"
-          echo "Assignees: $assignees"
-          echo "Labels: $labels"
-          echo "HAS_BACKEND=$has_backend" >> $GITHUB_ENV
-          echo "HAS_FRONTEND=$has_frontend" >> $GITHUB_ENV
+          echo "LABELS=$labels" >> $GITHUB_ENV
           echo "TITLE=$title" >> $GITHUB_ENV
           echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
+          
+          pr_title="feat: ${title}(#${issue_number})"
+          echo "PR_TITLE=$pr_title" >> $GITHUB_ENV
+
+      - name: Generate PR Body
+        id: generate-body
+        run: |
+          issue_number="${{ env.ISSUE_NUMBER }}"
+          
+          pr_body=""
+          echo "## 📌 관련 이슈" >> body.md
+          echo "" >> body.md
+          echo "- closed: #${issue_number}" >> body.md
+          echo "" >> body.md
+          echo "## ✨ PR 세부 내용" >> body.md
+          echo "" >> body.md
+          echo "<!-- 수정/추가한 내용을 적어주세요. -->" >> body.md
+          summary=$(cat body.md)
+          echo "PR_BODY<<EOF" >> $GITHUB_ENV
+          echo "$summary" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Display Issue Info
         run: |
           echo "Issue Title: ${{ env.TITLE }}"
           echo "Issue Assignees: ${{ env.ASSIGNEES }}"
           echo "Labels: ${{ env.LABELS }}"
-          echo "Has Backend Label: ${{ env.HAS_BACKEND }}"
-          echo "Has Frontend Label: ${{ env.HAS_FRONTEND }}"
+          echo "PR TITLE: ${{ env.PR_TITLE }}"
+          echo "PR BODY: ${{ env.PR_BODY }}"
+          echo "BRNACH : ${{ env.BRANCH_NAME }}"
+
+      - name: Create Pull Request
+        run: |
+          pr_number=$(gh pr create --assignee "@me" --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "${{ env.LABELS }}" | xargs gh pr view --json number -q .number)
+          echo "PR_NUMBER=$pr_number" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Add Labels to Pull Request
+        run: |
+          IFS=',' read -r -a LABEL_ARRAY <<< "${{ env.LABELS }}"
+          for LABEL in "${LABEL_ARRAY[@]}"; do
+            gh pr edit "${{ env.PR_NUMBER }}" --add-label "$LABEL"
+          done
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+
+#        id: cpr
+#        uses: peter-evans/create-pull-request@v6
+#        with:
+#          commit-message: "PR 자동 생성"
+#          title: ${{ env.PR_TITLE }}
+#          labels: ${{ env.LABELS }}
+#          assignees: ${{ env.ASSIGNEES }}
+#          body: ${{ env.PR_BODY }}
+#          base: develop
+#          branch: ${{ env.BRANCH_NAME }}
