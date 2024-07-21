@@ -17,7 +17,7 @@ jobs:
         id: extract
         run: |
           branch_name="${GITHUB_REF#refs/heads/}"
-          echo "BRANCH_NAME=BRANCH_NAME" >> $GITHUB_ENV
+          echo "BRANCH_NAME=branch_name" >> $GITHUB_ENV
           
           if [[ "$branch_name" =~ ^feat/#([0-9]+)$ ]]; then
             issue_number="${BASH_REMATCH[1]}"
@@ -52,7 +52,7 @@ jobs:
         run: |
           issue_number="${{ env.ISSUE_NUMBER }}"
           pr_body="## 📌 관련 이슈\n\n- closed: #${issue_number}\n\n## ✨ PR 세부 내용\n\n"
-          echo "PR_BODY=$PR_BODY" >> $GITHUB_ENV
+          echo "PR_BODY$pr_body" >> $GITHUB_ENV
 
       - name: Display Issue Info
         run: |
