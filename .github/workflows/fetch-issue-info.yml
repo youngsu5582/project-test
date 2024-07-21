@@ -51,13 +51,19 @@ jobs:
         id: generate-body
         run: |
           issue_number="${{ env.ISSUE_NUMBER }}"
-          pr_body=""
-          pr_body+="## 📌 관련 이슈\n"
-          pr_body+="- closed: #${issue_number}\n"
-          pr_body+="\n## ✨ PR 세부 내용\n"
-          pr_body+="<!-- 수정/추가한 내용을 적어주세요. -->\n"
           
-          echo "PR_BODY=$pr_body" >> $GITHUB_ENV
+          pr_body=""
+          echo "## 📌 관련 이슈" >> body.md
+          echo "" >> body.md
+          echo "- closed: #${issue_number}" >> body.md
+          echo "" >> body.md
+          echo "## ✨ PR 세부 내용" >> body.md
+          echo "" >> body.md
+          echo "<!-- 수정/추가한 내용을 적어주세요. -->" >> body.md
+          summary=$(cat summary.md)
+          echo "PR_BODY<<EOF" >> $GITHUB_ENV
+          echo "$summary" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Display Issue Info
         run: |
@@ -77,8 +83,10 @@ jobs:
 
       - name: Add Labels to Pull Request
         run: |
-          # Add labels to the newly created pull request
-          gh pr edit ${{ env.PR_NUMBER }} --add-label ${{ env.LABELS }}
+          IFS=',' read -r -a LABEL_ARRAY <<< "${{ env.LABELS }}"
+          for LABEL in "${LABEL_ARRAY[@]}"; do
+            gh pr edit "${{ env.PR_NUMBER }}" --add-label "$LABEL"
+          done
 
 #        id: cpr
 #        uses: peter-evans/create-pull-request@v6
