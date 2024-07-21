@@ -13,10 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Fetch feat/#33 branch
-        run: |
-          git fetch origin ${GITHUB_REF#refs/heads/}:${GITHUB_REF#refs/heads/}
-
       - name: Extract Issue Number
         id: extract
         run: |
@@ -68,6 +64,7 @@ jobs:
           echo "BRNACH : ${{ env.BRANCH_NAME }}"
           
       - name: Create Pull Request
+        id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
           commit-message: "PR 자동 생성"
