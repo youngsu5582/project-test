@@ -77,5 +77,5 @@ jobs:
           labels: ${{ env.LABELS }}
           assignees: ${{ env.ASSIGNEES }}
           body: ${{ env.PR_BODY }}
-          base: develop
-          branch: ${{ env.BRANCH_NAME }}
+          base: ${{ env.BRANCH_NAME }}
+          branch: develop
