@@ -6,7 +6,7 @@ on:
       - 'feat/*'
 
 jobs:
-  get-issue-info:
+  auto-pull-request:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,7 +18,7 @@ jobs:
         run: |
           branch_name="${GITHUB_REF#refs/heads/}"
           echo "Branch Name: $branch_name"
-          if [[ "$branch_name" =~ ^feat/([0-9]+)$ ]]; then
+          if [[ "$branch_name" =~ ^feat/#([0-9]+)$ ]]; then
             issue_number="${BASH_REMATCH[1]}"
             echo "Issue Number: $issue_number"
             echo "ISSUE_NUMBER=$issue_number" >> $GITHUB_ENV
