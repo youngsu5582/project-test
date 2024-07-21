@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: develop
 
       - name: Fetch feat/#33 branch
         run: |
@@ -77,5 +75,5 @@ jobs:
           labels: ${{ env.LABELS }}
           assignees: ${{ env.ASSIGNEES }}
           body: ${{ env.PR_BODY }}
-          base: ${{ env.BRANCH_NAME }}
-          branch: develop
+          base: develop
+          branch: ${{ env.BRANCH_NAME }}
