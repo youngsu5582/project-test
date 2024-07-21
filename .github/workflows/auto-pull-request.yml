@@ -35,6 +35,8 @@ jobs:
             echo "EXISTING_PR=$existing_pr" >> $GITHUB_ENV
             exit 0
           fi
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Fetch Issue Details
         run: |
