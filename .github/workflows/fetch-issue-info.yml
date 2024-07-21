@@ -52,6 +52,7 @@ jobs:
         run: |
           issue_number="${{ env.ISSUE_NUMBER }}"
           pr_body="## 📌 관련 이슈\n\n- closed: #${issue_number}\n\n## ✨ PR 세부 내용\n\n"
+          printf "%s" "$pr_body" >> $GITHUB_ENV
           echo "PR_BODY=$pr_body" >> $GITHUB_ENV
 
       - name: Display Issue Info
