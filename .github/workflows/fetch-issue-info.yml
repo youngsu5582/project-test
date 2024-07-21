@@ -60,7 +60,7 @@ jobs:
           echo "## ✨ PR 세부 내용" >> body.md
           echo "" >> body.md
           echo "<!-- 수정/추가한 내용을 적어주세요. -->" >> body.md
-          summary=$(cat summary.md)
+          summary=$(cat body.md)
           echo "PR_BODY<<EOF" >> $GITHUB_ENV
           echo "$summary" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
