@@ -17,6 +17,8 @@ jobs:
         id: extract
         run: |
           branch_name="${GITHUB_REF#refs/heads/}"
+          echo "BRANCH_NAME=BRANCH_NAME" >> $GITHUB_ENV
+          
           if [[ "$branch_name" =~ ^feat/#([0-9]+)$ ]]; then
             issue_number="${BASH_REMATCH[1]}"
             echo "ISSUE_NUMBER=$issue_number" >> $GITHUB_ENV
@@ -42,8 +44,15 @@ jobs:
           echo "TITLE=$title" >> $GITHUB_ENV
           echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
           
-          pr_title="feat: ${title}(${issue_number})"
+          pr_title="feat: ${title}(#${issue_number})"
           echo "PR_TITLE=$pr_title" >> $GITHUB_ENV
+
+      - name: Generate PR Body
+        id: generate-body
+        run: |
+          issue_number="${{ env.ISSUE_NUMBER }}"
+          pr_body="## 📌 관련 이슈\n\n- closed: #${issue_number}\n\n## ✨ PR 세부 내용\n\n"
+          echo "PR_BODY=$PR_BODY" >> $GITHUB_ENV
 
       - name: Display Issue Info
         run: |
@@ -51,3 +60,16 @@ jobs:
           echo "Issue Assignees: ${{ env.ASSIGNEES }}"
           echo "Labels: ${{ env.LABELS }}"
           echo "PR TITLE: ${{ env.PR_TITLE }}"
+          echo "PR BODY: ${{ env.PR_BODY }}"
+          echo "BRNACH : ${{ env.BRANCH_NAME }}"
+          
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          title: ${{ env.PR_TITLE }}
+          labels: ${{ env.LABELS }}
+          assignees: ${{ env.ASSIGNEES }}
+          body: ${{ env.PR_BODY }}
+          base: develop
+          branch: ${{ env.BRANCH_NAME }}
+
