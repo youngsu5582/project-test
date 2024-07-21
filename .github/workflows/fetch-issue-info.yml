@@ -51,8 +51,8 @@ jobs:
         id: generate-body
         run: |
           issue_number="${{ env.ISSUE_NUMBER }}"
-          pr_body= "## 📌 관련 이슈 \n\n"
-          echo "PR_BODY=${pr_body}" >> $GITHUB_ENV
+          pr_body="## 📌 관련 이슈 \n\n"
+          echo "PR_BODY=$pr_body" >> $GITHUB_ENV
 
       - name: Display Issue Info
         run: |
