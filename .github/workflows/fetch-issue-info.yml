@@ -53,10 +53,11 @@ jobs:
                             -H "Accept: application/vnd.github.v3+json" \
                             "https://api.github.com/repos/${{ github.repository }}/issues/$issue_number")
           
+          echo "RESPONSE = $response"
           assignees=$(echo "$response" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//')
           assignees=$(echo "$assignees" | rev | cut -c 2- | rev)
           title=$(echo "$response" | jq -r '.title')
-          echo "RESPONSE = $response"
+          body=${echo "$response" | jq -r '.body')
           labels=$(echo "$response" | jq -r '.labels[].name' | tr '\n' ', ' | sed 's/, $//')
           labels=$(echo "$labels" | rev | cut -c 2- | rev)
           
@@ -66,12 +67,14 @@ jobs:
           echo "LABELS=$labels" >> $GITHUB_ENV
           echo "TITLE=$title" >> $GITHUB_ENV
           echo "PR_TITLE=$pr_title" >> $GITHUB_ENV
+          echo "ISSUE_BODY=$body" >> $GITHUB_ENV
 
       - name: Generate PR Body
         if: ${{ !env.EXISTED }}
         id: generate-body
         run: |
           issue_number="${{ env.ISSUE_NUMBER }}"
+          issue_body="${{ env.ISSUE_BODY }}"
           
           pr_body=""
           echo "## 📌 관련 이슈" >> body.md
@@ -80,6 +83,7 @@ jobs:
           echo "" >> body.md
           echo "## ✨ PR 세부 내용" >> body.md
           echo "" >> body.md
+          echo "${" >> body.md
           echo "<!-- 수정/추가한 내용을 적어주세요. -->" >> body.md
           
           summary=$(cat body.md)
