@@ -53,7 +53,9 @@ jobs:
           assignees=$(echo "$response" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//')
           title=$(echo "$response" | jq -r '.title')
           echo "RESPONSE = $response"
-          labels=$(echo "$response" | jq -r '.labels[].name' | tr '\n' ', ' | sed 's/, $//' | sed 's/, $//')
+          labels=$(echo "$response" | jq -r '.labels[].name' | tr '\n' ', ' | sed 's/, $//')
+          labels=$(echo "$labels" | rev | cut -c 1- | rev)
+          
           pr_title="${title}(#${issue_number})"
           
           echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
