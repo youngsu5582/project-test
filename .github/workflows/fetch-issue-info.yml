@@ -52,20 +52,11 @@ jobs:
                             "https://api.github.com/repos/${{ github.repository }}/issues/$issue_number")
           
           title=$(echo "$response" | jq -r '.title')
-          
-          assignees=$(echo "$response" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//')
-          
-          echo "ASSGIN : ${assignees}"
-          if [[ $assignees == *, ]]; then
-          assignees=$(echo "$assignees" | sed 's/, $//')
-          fi
-          
           labels=$(echo "$response" | jq -r '.labels[].name' | tr '\n' ', ' | sed 's/, $//')
           pr_title="${branch_prefix}: ${title}(#${issue_number})"
           
           echo "LABELS=$labels" >> $GITHUB_ENV
           echo "TITLE=$title" >> $GITHUB_ENV
-          echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
           echo "PR_TITLE=$pr_title" >> $GITHUB_ENV
 
       - name: Generate PR Body
@@ -90,7 +81,6 @@ jobs:
       - name: Display Issue Info
         run: |
           echo "Issue Title: ${{ env.TITLE }}"
-          echo "Issue Assignees: ${{ env.ASSIGNEES }}"
           echo "Labels: ${{ env.LABELS }}"
           echo "PR TITLE: ${{ env.PR_TITLE }}"
           echo "PR BODY: ${{ env.PR_BODY }}"
@@ -98,7 +88,7 @@ jobs:
 
       - name: Create Pull Request
         run: |
-            pr_number=$(gh pr create --assignee "${{ env.ASSIGNEES }}" --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "${{ env.LABELS }}" | xargs gh pr view --json number -q .number)
+            pr_number=$(gh pr create --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "${{ env.LABELS }}" | xargs gh pr view --json number -q .number)
             echo "PR_NUMBER=$pr_number" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ github.token }}
