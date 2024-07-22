@@ -99,13 +99,13 @@ jobs:
           reviewers=""
           for LABEL in "${LABEL_ARRAY[@]}"; do
             if [[ "$LABEL" == "BE" ]]; then
-              reviewers="ashsty, jcoding-play, hjk0761, youngsu5582"
+              reviewers="ashsty,jcoding-play,hjk0761,youngsu5582"
             elif [[ "$LABEL" == "FE" ]]; then
-              reviewers="00kang, pp449, chlwlstlf"
+              reviewers="00kang,pp449,chlwlstlf"
             fi
           done
           
-          echo "REVIEWERS=$reviewers" >> $GITHUB_ENV
+          echo "REVIEWERS=${reviewers}" >> $GITHUB_ENV
 
       - name: Create Pull Request
         if: ${{ !env.EXISTED }}
