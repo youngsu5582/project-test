@@ -94,10 +94,10 @@ jobs:
             fi
           done
           
-          label = "${{ env.LABELS }}"
+          labels="${{ env.LABELS }}"
           new_label=$(echo "$labels" | rev | cut -c 2- | rev)
           echo "NEW_LABEL=$new_label" >> $GITHUB_ENV
-          echo "NEW_ABEL= $new_label"
+          echo "NEW_LABEL= $new_label"
           echo "REVIEWERS=$reviewers" >> $GITHUB_ENV
           
 
