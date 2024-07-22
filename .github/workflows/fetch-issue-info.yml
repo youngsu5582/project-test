@@ -27,16 +27,15 @@ jobs:
             echo "BRANCH_PREFIX=$branch_prefix" >> $GITHUB_ENV
             echo "ISSUE_NUMBER=$issue_number" >> $GITHUB_ENV
           else
-            exit 1
+            exit 0
           fi
 
-      - name: Check for Existing Pull Request
+      - name: Check for Already Exist
         id: check_pr
         run: |
-          existing_pr=$(gh pr list --search "${{ env.BRANCH_NAME }}" --json number -q '.[] | .number')
+          existing_pr=$(gh pr list --state "open" --search "${{ env.BRANCH_NAME }}" --json number -q '.[] | .number')
+          echo "EXISTED=$existing_pr"
           if [ -n "$existing_pr" ]; then
-            echo "PR already exists: $existing_pr"
-            echo "EXISTING_PR=$existing_pr" >> $GITHUB_ENV
             exit 0
           fi
         env:
@@ -54,7 +53,7 @@ jobs:
           assignees=$(echo "$response" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//')
           title=$(echo "$response" | jq -r '.title')
           labels=$(echo "$response" | jq -r '.labels[].name' | tr '\n' ', ' | sed 's/, $//')
-          pr_title="${branch_prefix}: ${title}(#${issue_number})"
+          pr_title="${title}(#${issue_number})"
           
           echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
           echo "LABELS=$labels" >> $GITHUB_ENV
@@ -69,7 +68,7 @@ jobs:
           pr_body=""
           echo "## 📌 관련 이슈" >> body.md
           echo "" >> body.md
-          echo "Closes #${issue_number}" >> body.md
+          echo "- closed : #${issue_number} " >> body.md
           echo "" >> body.md
           echo "## ✨ PR 세부 내용" >> body.md
           echo "" >> body.md
@@ -80,32 +79,19 @@ jobs:
           echo "$summary" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      - name: Display Issue Info
-        run: |
-          echo "Issue Title: ${{ env.TITLE }}"
-          echo "Labels: ${{ env.LABELS }}"
-          echo "PR TITLE: ${{ env.PR_TITLE }}"
-          echo "PR BODY: ${{ env.PR_BODY }}"
-          echo "BRNACH : ${{ env.BRANCH_NAME }}"
-
       - name: Create Pull Request
         run: |
-          pr_number=$(gh pr create --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "${{ env.LABELS }}" | xargs gh pr view --json number -q .number)
-          echo "PR_NUMBER=$pr_number" >> $GITHUB_ENV
-        env:
-          GH_TOKEN: ${{ github.token }}
-
-      - name: Add Labels to Pull Request
-        run: |
           IFS=',' read -r -a LABEL_ARRAY <<< "${{ env.LABELS }}"
+          reviewers=""
           for LABEL in "${LABEL_ARRAY[@]}"; do
-            echo "LABEL = ${LABEL}"
             if [[ "$LABEL" == "BE" ]]; then
-               gh pr edit "${{ env.PR_NUMBER }}" --add-reviewer "youngsu5582,jcoding-play"
-            elif [["$LABEL" == "FE" ]]; then
-               gh pr edit "${{ env.PR_NUMBER }}" --add-reviewer "00kang,pp449,chlwlstlf"
+              reviewers="ashsty,jcoding-play,hjk0761,youngsu5582"
+            elif [[ "$LABEL" == "FE" ]]; then
+              reviewers="00kang,pp449,chlwlstlf"
             fi
-            gh pr edit "${{ env.PR_NUMBER }}" --add-label "$LABEL" --remove-reviewer "${{ env.ASSIGNEES }}"
           done
+          
+          echo "REVIEWR=$reviewers"
+          gh pr create --reviewer "$reviewers" --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "${{ env.LABELS }}"
         env:
           GH_TOKEN: ${{ github.token }}
