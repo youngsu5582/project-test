@@ -99,7 +99,7 @@ jobs:
           reviewers=""
           for LABEL in "${LABEL_ARRAY[@]}"; do
             if [[ "$LABEL" == "BE" ]]; then
-              reviewers=["ashsty", "jcoding-play", "hjk0761", "youngsu5582"]
+              reviewers="ashsty, jcoding-play, hjk0761, youngsu5582"
             elif [[ "$LABEL" == "FE" ]]; then
               reviewers="00kang, pp449, chlwlstlf"
             fi
@@ -110,13 +110,6 @@ jobs:
       - name: Create Pull Request
         if: ${{ !env.EXISTED }}
         run: |
-          gh pr create --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "${{ env.LABELS }}"
+          gh pr create --assignee "${{ env.ASSIGNEES }}" --reviewer "${{ env.REVIEWERS }}" --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "${{ env.LABELS }}"
         env:
           GH_TOKEN: ${{ github.token }}
-
-      - name: Assign Reviewers,Assignees
-        uses: wow-actions/auto-assign@v3
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          reviewers: ${{ env.REVIEWERS }}
-          assignees: ${{ env.ASSIGNEES }}
