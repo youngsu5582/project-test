@@ -83,7 +83,7 @@ jobs:
           echo "" >> body.md
           echo "## ✨ PR 세부 내용" >> body.md
           echo "" >> body.md
-          echo "${" >> body.md
+          echo "${issue_body}" >> body.md
           echo "<!-- 수정/추가한 내용을 적어주세요. -->" >> body.md
           
           summary=$(cat body.md)
