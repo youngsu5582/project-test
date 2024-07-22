@@ -99,7 +99,7 @@ jobs:
           for LABEL in "${LABEL_ARRAY[@]}"; do
             echo "LABEL = ${LABEL}"
             if [[ "$LABEL" == "BE" ]]; then
-               gh pr edit "${{ env.PR_NUMBER }}" --add-reviewer "ashsty, jcoding-play, hjk0761, youngsu5582"
+               gh pr edit "${{ env.PR_NUMBER }}" --add-reviewer "ashsty jcoding-play hjk0761 youngsu5582"
             fi
             gh pr edit "${{ env.PR_NUMBER }}" --add-label "$LABEL" --remove-reviewer "${{ github.event.push.user.login }}"
           done
