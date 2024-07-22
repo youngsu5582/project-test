@@ -30,22 +30,23 @@ jobs:
             exit 0
           fi
 
-      - name: Check for Already Exist
+      - name: Check for Existing PR
         id: check_pr
         run: |
           branch_name="${{ env.BRANCH_NAME }}"
-          existing_pr=$(gh pr list --state open --search "refactor/#27" --json number -q '.[] | .number')
-          echo "existing_pr=$existing_pr" >> $GITHUB_ENV
-
-          echo "EXISTED=$existing_pr"
-          if [ -n "$existing_pr" ]; then
+          existing_pr_number=$(gh pr list --state open --search "refactor/#${{ env.ISSUE_NUMBER }}" --json number -q '.[] | .number')
+          
+          if [ -n "$existing_pr_number" ]; then
+            echo "EXISTING_PR_NUMBER=$existing_pr_number" >> $GITHUB_ENV
+            echo "A pull request already exists: https://github.com/${{ github.repository }}/pull/$existing_pr_number"
             exit 0
           fi
-          echo "EXISTED=$existing_pr" >> $GITHUB_ENV
+
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch Issue Details
+        if: steps.check_pr.outputs.existing_pr_number == ''
         run: |
           issue_number="${{ env.ISSUE_NUMBER }}"
           branch_prefix="${{ env.BRANCH_PREFIX }}"
@@ -103,6 +104,7 @@ jobs:
           echo "REVIEWERS=$reviewers" >> $GITHUB_ENV
 
       - name: Create Pull Request
+        if: steps.check_pr.outputs.existing_pr_number == ''
         run: |
           gh pr create --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "${{ env.LABELS }}"
         env:
