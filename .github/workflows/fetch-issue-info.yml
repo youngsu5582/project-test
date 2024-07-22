@@ -51,9 +51,11 @@ jobs:
                             "https://api.github.com/repos/${{ github.repository }}/issues/$issue_number")
           
           assignees=$(echo "$response" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//')
+          assignees=$(echo "$assignees" | rev | cut -c 2- | rev)
           title=$(echo "$response" | jq -r '.title')
           echo "RESPONSE = $response"
           labels=$(echo "$response" | jq -r '.labels[].name' | tr '\n' ', ' | sed 's/, $//')
+          labels=$(echo "$labels" | rev | cut -c 2- | rev)
           
           pr_title="${title}(#${issue_number})"
           
@@ -94,15 +96,10 @@ jobs:
             fi
           done
           
-          labels="${{ env.LABELS }}"
-          new_label=$(echo "$labels" | rev | cut -c 2- | rev)
-          echo "NEW_LABEL=$new_label" >> $GITHUB_ENV
-          echo "NEW_LABEL= $new_label"
           echo "REVIEWERS=$reviewers" >> $GITHUB_ENV
-          
 
       - name: Create Pull Request
         run: |
-          gh pr create --assignee "youngsu5582" --reviewer "${{ env.REVIEWERS }}" --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "${{ env.NEW_LABEL }}"
+          gh pr create --assignee "${{ env.ASSIGNEES }}" --reviewer "${{ env.REVIEWERS }}" --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "${{ env.LABEL }}"
         env:
           GH_TOKEN: ${{ github.token }}
