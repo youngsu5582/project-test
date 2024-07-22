@@ -90,7 +90,7 @@ jobs:
           reviewers=""
           for LABEL in "${LABEL_ARRAY[@]}"; do
             if [[ "$LABEL" == "BE" ]]; then
-              reviewers="youngsu5582,jcoding-play"
+              reviewers="youngsu5582"
             elif [[ "$LABEL" == "FE" ]]; then
               reviewers="00kang,pp449,chlwlstlf"
             fi
@@ -100,6 +100,6 @@ jobs:
 
       - name: Create Pull Request
         run: |
-          gh pr create --assignee "${{ env.ASSIGNEES }}" --reviewer "${{ env.REVIEWERS }}" --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "${{ env.LABEL }}"
+          gh pr create --assignee "${{ env.ASSIGNEES }}" --reviewer "${{ env.REVIEWERS }}" --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "bug, BE"
         env:
           GH_TOKEN: ${{ github.token }}
