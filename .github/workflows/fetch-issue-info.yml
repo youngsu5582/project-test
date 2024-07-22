@@ -57,7 +57,7 @@ jobs:
           assignees=$(echo "$response" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//')
           assignees=$(echo "$assignees" | rev | cut -c 2- | rev)
           title=$(echo "$response" | jq -r '.title')
-          body=${echo "$response" | jq -r '.body')
+          body=$(echo "$response" | jq -r '.body')
           labels=$(echo "$response" | jq -r '.labels[].name' | tr '\n' ', ' | sed 's/, $//')
           labels=$(echo "$labels" | rev | cut -c 2- | rev)
           
