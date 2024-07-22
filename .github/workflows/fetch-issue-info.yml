@@ -68,6 +68,7 @@ jobs:
           echo "PR_TITLE=$pr_title" >> $GITHUB_ENV
 
       - name: Generate PR Body
+        if: ${{ !env.EXISTED }}
         id: generate-body
         run: |
           issue_number="${{ env.ISSUE_NUMBER }}"
