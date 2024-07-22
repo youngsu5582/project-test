@@ -33,8 +33,8 @@ jobs:
       - name: Check for Already Exist
         id: check_pr
         run: |
-          branch_name = ${{ env.BRANCH_NAME }}
-          response = gh pr list --state "open" --search $branch_name
+          branch_name="${{ env.BRANCH_NAME }}"
+          response = gh pr list --state "open" --search "$branch_name"
           echo "RESPONSE = $response"
           existing_pr=$(gh pr list --state "open" --search $branch_name --json number -q '.[] | .number')
           echo "EXISTED=$existing_pr"
