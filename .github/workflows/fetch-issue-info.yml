@@ -52,7 +52,12 @@ jobs:
                             "https://api.github.com/repos/${{ github.repository }}/issues/$issue_number")
           
           title=$(echo "$response" | jq -r '.title')
+          
           assignees=$(echo "$response" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//')
+          if [[ $assignees == *, ]]; then
+          assignees=$(echo "$assignees" | sed 's/, $//')
+          fi
+          
           labels=$(echo "$response" | jq -r '.labels[].name' | tr '\n' ', ' | sed 's/, $//')
           pr_title="${branch_prefix}: ${title}(#${issue_number})"
           
