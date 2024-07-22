@@ -85,10 +85,8 @@ jobs:
         id: setup-reviewer
         run: |
           IFS=',' read -r -a LABEL_ARRAY <<< "${{ env.LABELS }}"
-          new_label=""
           reviewers=""
           for LABEL in "${LABEL_ARRAY[@]}"; do
-            new_label+=$LABEL
             if [[ "$LABEL" == "BE" ]]; then
               reviewers="youngsu5582,jcoding-play"
             elif [[ "$LABEL" == "FE" ]]; then
@@ -96,7 +94,10 @@ jobs:
             fi
           done
           
+          label = ${{ env.LABELS }}
+          new_label=$(echo "$labels" | rev | cut -c 2- | rev)
           echo "NEW_LABEL=$new_label" >> $GITHUB_ENV
+          echo "NEW_ABEL= $new_label"
           echo "REVIEWERS=$reviewers" >> $GITHUB_ENV
           
 
