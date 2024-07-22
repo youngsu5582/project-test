@@ -100,6 +100,20 @@ jobs:
 
       - name: Create Pull Request
         run: |
-          gh pr create --assignee "${{ env.ASSIGNEES }}" --reviewer "${{ env.REVIEWERS }}" --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "${{ env.LABELS }}"
+          gh pr create \
+#            --assignee "${{ env.ASSIGNEES }}" \
+#            --reviewer "${{ env.REVIEWERS }}" \
+            --title "${{ env.PR_TITLE }}" \
+            --body "${{ env.PR_BODY }}" \
+            --base "develop" \ 
+            --label "${{ env.LABELS }}"
         env:
           GH_TOKEN: ${{ github.token }}
+
+      - name: Assign Reviewers,Assignees
+        uses: wow-actions/auto-assign@v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          reviewers: ${{ env.REVIEWERS }}
+          assignees: ${{ env.ASSIGNEES }}
+
