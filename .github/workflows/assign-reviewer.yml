@@ -1,10 +1,7 @@
 name: Assign Reviewer By Label
 on:
-  pull_request:
-    types:
-      - opened
-      - edited
-      - labeled
+  repository_dispatch:
+    types: [assign-reviewer]
 jobs:
   assign-reviewer:
     runs-on: ubuntu-latest

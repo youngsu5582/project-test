@@ -101,3 +101,12 @@ jobs:
           done
         env:
           GH_TOKEN: ${{ github.token }}
+
+
+      - name: Trigger Workflow
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -d '{"event_type": "assign-reviewer", "client_payload": {"pull_request_number": "${{ env.PR_NUMBER }}"}}' \
+            https://api.github.com/repos/${{ github.repository }}/dispatches
