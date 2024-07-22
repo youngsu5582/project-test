@@ -99,9 +99,9 @@ jobs:
           reviewers=""
           for LABEL in "${LABEL_ARRAY[@]}"; do
             if [[ "$LABEL" == "BE" ]]; then
-              reviewers="ashsty,jcoding-play,hjk0761,youngsu5582"
+              reviewers="ashsty, jcoding-play, hjk0761, youngsu5582"
             elif [[ "$LABEL" == "FE" ]]; then
-              reviewers="00kang,pp449,chlwlstlf"
+              reviewers="00kang, pp449, chlwlstlf"
             fi
           done
           
@@ -115,10 +115,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
       - name: Assign Reviewers,Assignees
-        if: ${{ !env.EXISTED }}
         uses: wow-actions/auto-assign@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           reviewers: ${{ env.REVIEWERS }}
           assignees: ${{ env.ASSIGNEES }}
-
