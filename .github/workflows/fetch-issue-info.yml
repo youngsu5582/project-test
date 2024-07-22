@@ -65,12 +65,11 @@ jobs:
         id: generate-body
         run: |
           issue_number="${{ env.ISSUE_NUMBER }}"
-          issue_title="${{ env.TITLE }}"
           
           pr_body=""
           echo "## 📌 관련 이슈" >> body.md
           echo "" >> body.md
-          echo "- closed: ${issue_title} #${issue_number}" >> body.md
+          echo "Closes #${issue_number}" >> body.md
           echo "" >> body.md
           echo "## ✨ PR 세부 내용" >> body.md
           echo "" >> body.md
