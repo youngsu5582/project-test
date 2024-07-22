@@ -54,7 +54,6 @@ jobs:
           title=$(echo "$response" | jq -r '.title')
           echo "RESPONSE = $response"
           labels=$(echo "$response" | jq -r '.labels[].name' | tr '\n' ', ' | sed 's/, $//')
-          labels=$(echo "$labels" | rev | cut -c 1- | rev)
           
           pr_title="${title}(#${issue_number})"
           
@@ -100,6 +99,6 @@ jobs:
 
       - name: Create Pull Request
         run: |
-          gh pr create --assignee ${{ env.ASSIGNEES }} --reviewer ${{ env.REVIEWERS }} --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "${{ env.LABELS }}"
+          gh pr create --assignee ${{ env.ASSIGNEES }} --reviewer ${{ env.REVIEWERS }} --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "BE"
         env:
           GH_TOKEN: ${{ github.token }}
