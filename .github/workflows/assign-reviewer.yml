@@ -2,6 +2,7 @@ name: Assign Reviewer By Label
 on:
   pull_request:
     types:
+      - opened
       - edited
       - labeled
 jobs:
