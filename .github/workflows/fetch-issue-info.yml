@@ -34,9 +34,9 @@ jobs:
         id: check_pr
         run: |
           branch_name=${{ env.BRANCH_NAME }}
-          response=$(gh pr list --search "$branch_name")
+          response=$(gh pr list --search $branch_name)
           echo "RESPONSE=$response"
-          all_response=$(gh pr list)
+          all_response=$(gh pr list --search "refactor/#27")
           echo "ALL_RESPONSE=$all_response"
           existing_pr=$(gh pr list --state "open" --search "$branch_name" --json number -q '.[] | .number')
           echo "EXISTED=$existing_pr"
