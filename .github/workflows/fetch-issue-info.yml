@@ -34,7 +34,9 @@ jobs:
         id: check_pr
         run: |
           branch_name="${{ env.BRANCH_NAME }}"
-          existing_pr=$(gh pr list --state "open" --search "refactor/#27" --json number -q '.[] | .number')
+          existing_pr=$(gh pr list --state open --search "refactor/#27" --json number -q '.[] | .number')
+          echo "existing_pr=$existing_pr" >> $GITHUB_ENV
+
           echo "EXISTED=$existing_pr"
           if [ -n "$existing_pr" ]; then
             exit 0
