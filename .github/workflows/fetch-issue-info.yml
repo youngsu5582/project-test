@@ -51,10 +51,12 @@ jobs:
                             -H "Accept: application/vnd.github.v3+json" \
                             "https://api.github.com/repos/${{ github.repository }}/issues/$issue_number")
           
+          assignees=$(echo "$response" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//')
           title=$(echo "$response" | jq -r '.title')
           labels=$(echo "$response" | jq -r '.labels[].name' | tr '\n' ', ' | sed 's/, $//')
           pr_title="${branch_prefix}: ${title}(#${issue_number})"
           
+          echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
           echo "LABELS=$labels" >> $GITHUB_ENV
           echo "TITLE=$title" >> $GITHUB_ENV
           echo "PR_TITLE=$pr_title" >> $GITHUB_ENV
@@ -99,11 +101,11 @@ jobs:
           for LABEL in "${LABEL_ARRAY[@]}"; do
             echo "LABEL = ${LABEL}"
             if [[ "$LABEL" == "BE" ]]; then
-               gh pr edit "${{ env.PR_NUMBER }}" --add-reviewer "youngsu5582"
+               gh pr edit "${{ env.PR_NUMBER }}" --add-reviewer "youngsu5582,jcoding-play"
             elif [["$LABEL" == "FE" ]]; then
                gh pr edit "${{ env.PR_NUMBER }}" --add-reviewer "00kang,pp449,chlwlstlf"
             fi
-            gh pr edit "${{ env.PR_NUMBER }}" --add-label "$LABEL" --remove-reviewer "${{ github.event.push.pusher.name }}"
+            gh pr edit "${{ env.PR_NUMBER }}" --add-label "$LABEL" --remove-reviewer "${{ env.ASSIGNEES }}"
           done
         env:
           GH_TOKEN: ${{ github.token }}
