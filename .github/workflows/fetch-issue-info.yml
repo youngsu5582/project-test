@@ -80,6 +80,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Setup Reviewers
+        id: setup-reviewer
         run: |
           IFS=',' read -r -a LABEL_ARRAY <<< "${{ env.LABELS }}"
           reviewers=""
@@ -91,7 +92,7 @@ jobs:
             fi
           done
           
-          echo "REVIEWERS=reviewers" >> $GITHUB_ENV
+          echo "REVIEWERS=$reviewers" >> $GITHUB_ENV
           
 
       - name: Create Pull Request
