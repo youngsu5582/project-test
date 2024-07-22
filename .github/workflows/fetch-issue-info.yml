@@ -36,6 +36,7 @@ jobs:
           branch_name=${{ env.BRANCH_NAME }}
           existing_pr=$(gh pr list --state open -H "$branch_name" -B develop --json number -q '.[] | .number')
           if [ -n "$existing_pr" ]; then
+            echo "EXISTED=TRUE" >> $GITHUB_ENV
             echo "Alreadt Exist in https://github.com/${{ github.repository }}/pull/$existing_pr"
             exit 0
           fi
@@ -43,6 +44,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
       - name: Fetch Issue Details
+        if: ${{ !env.EXISTED }}
         run: |
           issue_number="${{ env.ISSUE_NUMBER }}"
           branch_prefix="${{ env.BRANCH_PREFIX }}"
@@ -85,6 +87,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Setup Reviewers
+        if: ${{ !env.EXISTED }}
         id: setup-reviewer
         run: |
           IFS=',' read -r -a LABEL_ARRAY <<< "${{ env.LABELS }}"
@@ -100,6 +103,7 @@ jobs:
           echo "REVIEWERS=$reviewers" >> $GITHUB_ENV
 
       - name: Create Pull Request
+        if: ${{ !env.EXISTED }}
         run: |
           gh pr create --title "${{ env.PR_TITLE }}" --body "${{ env.PR_BODY }}" --base "develop" --label "${{ env.LABELS }}"
         env:
