@@ -111,6 +111,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
       - name: Assign Reviewers,Assignees
+        if: ${{ !env.EXISTED }}
         uses: wow-actions/auto-assign@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
