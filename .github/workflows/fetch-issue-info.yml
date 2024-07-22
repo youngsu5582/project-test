@@ -100,7 +100,7 @@ jobs:
             echo "LABEL = ${LABEL}"
             if [[ "$LABEL" == "BE" ]]; then
                gh pr edit "${{ env.PR_NUMBER }}" --add-reviewer "ashsty, jcoding-play, hjk0761, youngsu5582"
-            gh pr edit "${{ env.PR_NUMBER }}" --add-label "$LABEL" --remove-reviewer ${{ github.event.push.user.login }}"
+            gh pr edit "${{ env.PR_NUMBER }}" --add-label "$LABEL" --remove-reviewer "${{ github.event.push.user.login }}"
           done
         env:
           GH_TOKEN: ${{ github.token }}
