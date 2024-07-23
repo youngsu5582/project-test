@@ -6,9 +6,6 @@ phases:
       - echo Build Starting on `date`
       - chmod +x ./gradlew
       - ./gradlew build
-  post_build:
-    commands:
-      - mkdir -p scripts
 
 cache:
   paths:
