@@ -21,5 +21,7 @@ artifacts:
     - 'appspec.yml'
     - 'build/libs/backend-0.0.1-SNAPSHOT.jar '
     - 'scripts/**'
-  type: zip
+  discards-paths: yes
+  base-directory: build/libs
   name: build-output.zip
+  type: zip
