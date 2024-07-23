@@ -18,4 +18,4 @@ cache:
 
 artifacts:
   files:
-    - '**/*'
+    - 'build/libs/*.jar'
