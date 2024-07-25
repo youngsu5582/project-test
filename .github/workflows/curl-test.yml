@@ -15,6 +15,8 @@ jobs:
                             "https://api.github.com/repos/${{ github.repository }}/issues/46")
 
           echo "ASSIGNEE : $(echo "$response" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//')"
+          echo "LEGACY_LABELS : $(echo "$response" | jq -r '.labels[].name')"
+          echo "REFACTOR_LABELS : $(echo "$response" | jq -r '.labels[].name' | tr '\n' ', ')" 
           echo "LABELS : $(echo "$response" | jq -r '.labels[].name' | tr '\n' ', ' | sed 's/, $//')"
           echo "TITLE : $(echo "$response" | jq -r 'title')"
           echo "RESPONSE : $response"
