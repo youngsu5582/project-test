@@ -19,7 +19,7 @@ jobs:
           PULL_REQUEST_CONTEXT: ${{ toJson(github.event.pull_request) }}
         run: |
           echo "EVENT : $GITHUB_CONTEXT"
-          pull_request_id=$(echo "$PULL_REQUEST_CONTEXT" | jq -r '.id')
+          pull_request_id=$(echo "$PULL_REQUEST_CONTEXT" | jq -r '.number')
           assignees=$(echo "$PULL_REQUEST_CONTEXT" | jq -r '.assignees[].login' | tr '\n' ', ' | rev | cut -c 2- | rev)
           echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
           echo "PULL_REQUEST_ID=$pull_request_id" >> $GITHUB_ENV
