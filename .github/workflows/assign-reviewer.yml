@@ -10,28 +10,41 @@ jobs:
   assign-reviewer:
     runs-on: ubuntu-latest
 
-
     steps:
-      - name: Set up jq
-        run: sudo apt-get install jq
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: LOG ASSIGNEE
         run: |
           echo "RESPONSE :${{ github.event.pull_request }}"
           assignees=$(echo "${{ github.event.pull_request }}" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//' | rev | cut -c 3- | rev)
-          
+
+          echo "LEGACY : $assignees"
+
           static_assignees="i894, youngsu5582"
-          combined_reviewers="${static_assignees}, ${assignees}"
-          unique_reviewers=$(echo "$combined_reviewers" | uniq -u | tr '\n' ', ' | sed 's/, $//')
-          echo "UNIQUE_REVIEWERS : $unique_reviewers"
+                   # Convert assignees to an array
+          assignee_array=(${assignees//,/ })
           
-          echo "ASSIGNEES : $unique_reviewers"
-          echo "ASSIGNEES=$unique_reviewers" >> $GITHUB_ENV
+          # Combine static reviewers and assignees
+          combined_reviewers=("${static_reviewers[@]}" "${assignee_array[@]}")
+          
+          # Remove duplicates
+          unique_reviewers=($(echo "${combined_reviewers[@]}" | tr ' ' '\n' | sort | uniq | tr '\n' ' '))
+          
+          # Join the array into a comma-separated string
+          reviewers=$(IFS=, ; echo "${unique_reviewers[*]}")
+          
+          echo "UNIQUE_REVIEWERS : $reviewers"
+          
+          echo "UNIQUE_REVIEWERS : $reviewers"
+#
+#          echo "ASSIGNEES : $unique_reviewers"
+#          echo "ASSIGNEES=$unique_reviewers" >> $GITHUB_ENV
 
       - name: Backend Label
         uses: wow-actions/auto-assign@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           reviewers: i894, youngsu5582
-          assignees: ${{ env.assignees }}
+          assignees: i894
           includeLabels: BE
