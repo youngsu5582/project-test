@@ -47,6 +47,6 @@ jobs:
       - name: Create Pull Request
         if: ${{ !env.EXISTED }}
         run: |
-          gh pr edit "${{ env.PULL_REQUESET_ID }}" --add-reviewer "${{ env.REVIEWERS }}"
+          gh pr edit ${{ env.PULL_REQUEST_ID }} --add-reviewer "${{ env.REVIEWERS }}"
         env:
           GH_TOKEN: ${{ github.token }}
