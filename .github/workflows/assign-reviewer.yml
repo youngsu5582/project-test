@@ -16,25 +16,26 @@ jobs:
 
       - name: GET ASSIGNEES
         run: |
-          array=$(echo "${{ github.event.pull_request }}" | jq -r '.assignees[].login')
-          echo "ARRAY: $array"
-          assignees=$(echo "${{ github.event.pull_request }}" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//' | rev | cut -c 3- | rev)
-          echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
-
-      - name: LOG ASSIGNEE
-        run: |
-          static_reviewers=("i894" "youngsu5582")
-          echo "STATIC: $static_reviewers"
-          echo "STATIC: ${static_reviewers}"
-
-
-          echo "ASSIGNEES : $unique_reviewers"
-          echo "ASSIGNEES=$unique_reviewers" >> $GITHUB_ENV
-
-      - name: Backend Label
-        uses: wow-actions/auto-assign@v3
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          reviewers: i894, youngsu5582
-          assignees: ${{ env.ASSIGNEES }}
-          includeLabels: BE
+          echo "EVENT : ${{ github.event }}"
+          echo "LOGIN : ${{ github.event.pull_request.assignees.login }}"
+#          echo "ARRAY: $array"
+#          assignees=$(echo "${{ github.event.pull_request }}" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//' | rev | cut -c 3- | rev)
+#          echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
+#
+#      - name: LOG ASSIGNEE
+#        run: |
+#          static_reviewers=("i894" "youngsu5582")
+#          echo "STATIC: $static_reviewers"
+#          echo "STATIC: ${static_reviewers}"
+#
+#
+#          echo "ASSIGNEES : $unique_reviewers"
+#          echo "ASSIGNEES=$unique_reviewers" >> $GITHUB_ENV
+#
+#      - name: Backend Label
+#        uses: wow-actions/auto-assign@v3
+#        with:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          reviewers: i894, youngsu5582
+#          assignees: ${{ env.ASSIGNEES }}
+#          includeLabels: BE
