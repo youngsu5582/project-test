@@ -13,9 +13,14 @@ jobs:
       - name: LOG ASSIGNEE
         run: |
           assignees=$(echo "${{ github.event.pull_request }}" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//' | rev | cut -c 3- | rev)
+          static_assignees="i894, youngsu5582"
+          combined_reviewers="$static_reviewers, ${{ env.assignees }}"
+          unique_reviewers=$(echo "$combined_reviewers" | tr ', ' '\n' | sort | uniq | tr '\n' ', ' | sed 's/, $//')
           
-          echo "ASSIGNEES : $ASSIGNEES"
-          echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
+          echo "UNIQUE_REVIEWERS : $unique_reviewers"
+          
+          echo "ASSIGNEES : $unique_reviewers"
+          echo "ASSIGNEES=$unique_reviewers" >> $GITHUB_ENV
 
       - name: Backend Label
         uses: wow-actions/auto-assign@v3
