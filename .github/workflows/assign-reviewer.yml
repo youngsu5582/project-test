@@ -19,24 +19,34 @@ jobs:
           PULL_REQUEST_CONTEXT: ${{ toJson(github.event.pull_request) }}
         run: |
           echo "EVENT : $GITHUB_CONTEXT"
+          pull_request_id=$(echo "$PULL_REQUEST_CONTEXT" | jq -r '.number')
           assignees=$(echo "$PULL_REQUEST_CONTEXT" | jq -r '.assignees[].login' | tr '\n' ', ' | rev | cut -c 2- | rev)
           echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
+          echo "PULL_REQUEST_ID=$pull_request_id" >> $GITHUB_ENV
 
 
       - name: LOG ASSIGNEE
         run: |
+          echo "${{ env.ASSIGNEES }}"
           static_reviewers="i894, youngsu5582"
           combined_reviewers=$(echo "$static_reviewers, ${{ env.ASSIGNEES }}" | tr ', ' '\n' | sort)
           echo "COMBINE : $combined_reviewers"
-          unique_reviewers=$(echo "$combined_reviewers" | uniq -u | tr '\n' ', ' | rev | cut -c 2- | rev)
+          unique_reviewers=$(echo "$combined_reviewers" | uniq -u | tr '\n' ',' | rev | cut -c 2- | rev)
 
           echo "UNIQUE_REVIEWERS : $unique_reviewers"
           echo "REVIEWERS=$unique_reviewers" >> $GITHUB_ENV
 
-      - name: Backend Label
-        uses: wow-actions/auto-assign@v3
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          reviewers: ${{ env.REVIEWERS }}
-          addAssignees: false
-          includeLabels: BE
+#      - name: Backend Label
+#        uses: wow-actions/auto-assign@v3
+#        with:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          reviewers: ${{ env.REVIEWERS }}
+#          addAssignees: false
+#          addReviewers: true
+#          includeLabels: BE
+      - name: Create Pull Request
+        if: ${{ !env.EXISTED }}
+        run: |
+          gh pr edit ${{ env.PULL_REQUEST_ID }} --add-reviewer "${{ env.REVIEWERS }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
