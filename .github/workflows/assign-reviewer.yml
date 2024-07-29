@@ -25,6 +25,7 @@ jobs:
 
       - name: LOG ASSIGNEE
         run: |
+          echo "${{ env.ASSIGNEES }}"
           static_reviewers="i894, youngsu5582"
           combined_reviewers=$(echo "$static_reviewers, ${{ env.ASSIGNEES }}" | tr ', ' '\n' | sort)
           echo "COMBINE : $combined_reviewers"
