@@ -12,7 +12,8 @@ jobs:
     steps:
       - name: LOG ASSIGNEE
         run: |
-          assignees=$(echo "${{ github.event.pull_request }}" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//')
+          assignees=$(echo "${{ github.event.pull_request }}" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//' | rev | cut -c 3- | rev)
+          
           echo "ASSIGNEES : $ASSIGNEES"
           echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
 
