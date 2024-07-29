@@ -10,18 +10,16 @@ jobs:
   assign-reviewer:
     runs-on: ubuntu-latest
     steps:
-      - name: All Label
-        uses: wow-actions/auto-assign@v3
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          reviewers: ashsty, jcoding-play, hjk0761, youngsu5582
-          assignees: ${{ github.event.pull_request.user.login }}
-          includeLabels: ALL
+      - name: LOG ASSIGNEE
+        run: |
+          assignees=$(echo "${{ github.event.pull_request }}" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//')
+          echo "ASSIGNEES : $ASSIGNEES"
+          echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
 
       - name: Backend Label
         uses: wow-actions/auto-assign@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          reviewers: ashsty, jcoding-play, hjk0761, youngsu5582
-          assignees: ${{ github.event.pull_request.user.login }}
+          reviewers: i894, youngsu5582
+          assignees: ${{ env.assignees }}
           includeLabels: BE
