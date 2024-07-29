@@ -28,10 +28,10 @@ jobs:
           static_reviewers="i894, youngsu5582"
           combined_reviewers=$(echo "$static_reviewers, ${{ env.ASSIGNEES }}" | tr ', ' '\n' | sort)
           echo "COMBINE : $combined_reviewers"
-          unique_reviewers=$(echo "$combined_reviewers" | uniq -u | tr '\n' ', ' | sed 's/, $//')
+          unique_reviewers=$(echo "$combined_reviewers" | uniq -u | tr '\n' ', ' | rev | cut -c 2- | rev)
 
           echo "UNIQUE_REVIEWERS : $unique_reviewers"
-          echo "REVIEWERS=unique_reviewers" >> $GITHUB_ENV
+          echo "REVIEWERS=$unique_reviewers" >> $GITHUB_ENV
 
       - name: Backend Label
         uses: wow-actions/auto-assign@v3
