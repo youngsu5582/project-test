@@ -1,23 +1,42 @@
 name: Assign Reviewer By Label
 on:
-  repository_dispatch:
-    types: [assign-reviewer]
+  pull_request:
+    types:
+      - opened
+      - edited
+      - labeled
+      - unlabeled
 jobs:
   assign-reviewer:
     runs-on: ubuntu-latest
+
     steps:
-      - name: All Label
-        uses: wow-actions/auto-assign@v3
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          reviewers: ashsty, jcoding-play, hjk0761, youngsu5582
-          assignees: ${{ github.event.pull_request.user.login }}
-          includeLabels: ALL
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: GET ASSIGNEES
+        env:
+          PULL_REQUEST_CONTEXT: ${{ toJson(github.event.pull_request) }}
+        run: |
+          echo "EVENT : $GITHUB_CONTEXT"
+          assignees=$(echo "$PULL_REQUEST_CONTEXT" | jq -r '.assignees[].login' | tr '\n' ', ' | rev | cut -c 2- | rev)
+          echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
+
+
+      - name: LOG ASSIGNEE
+        run: |
+          static_reviewers="i894, youngsu5582"
+          combined_reviewers=$(echo "$static_reviewers, ${{ env.ASSIGNEES }}" | tr ', ' '\n' | sort)
+          echo "COMBINE : $combined_reviewers"
+          unique_reviewers=$(echo "$combined_reviewers" | uniq -u | tr '\n' ', ' | rev | cut -c 2- | rev)
+
+          echo "UNIQUE_REVIEWERS : $unique_reviewers"
+          echo "REVIEWERS=$unique_reviewers" >> $GITHUB_ENV
 
       - name: Backend Label
-        if: contains(github.event.pull_request.labels.*.name, 'BE')
         uses: wow-actions/auto-assign@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          reviewers: ashsty, jcoding-play, hjk0761, youngsu5582
-          assignees: ${{ github.event.pull_request.user.login }}
+          reviewers: ${{ env.REVIEWERS }}
+          addAssignees: false
+          includeLabels: BE
