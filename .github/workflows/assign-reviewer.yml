@@ -16,7 +16,7 @@ jobs:
 
       - name: GET ASSIGNEES
         run: |
-          array=$(echo "${{ github.event.pull_request }}" | jq -r '.assignees[].login'")
+          array=$(echo "${{ github.event.pull_request }}" | jq -r '.assignees[].login')
           echo "ARRAY: $array"
           assignees=$(echo "${{ github.event.pull_request }}" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//' | rev | cut -c 3- | rev)
           echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
