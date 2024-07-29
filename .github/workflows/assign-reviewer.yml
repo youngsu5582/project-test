@@ -19,7 +19,7 @@ jobs:
           PULL_REQUEST_CONTEXT: ${{ toJson(github.event.pull_request) }}
         run: |
           echo "EVENT : $GITHUB_CONTEXT"
-          assignees=$(echo "$PULL_REQUEST_CONTEXT" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//' | rev | cut -c 2- | rev)
+          assignees=$(echo "$PULL_REQUEST_CONTEXT" | jq -r '.assignees[].login' | tr '\n' ', ' | rev | cut -c 2- | rev)
           echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
 
 
@@ -27,6 +27,7 @@ jobs:
         run: |
           static_reviewers="i894, youngsu5582"
           combined_reviewers=$(echo "$static_reviewers, ${{ env.ASSIGNEES }}" | tr ', ' '\n' | sort)
+          echo "COMBINE : $combined_reviewers"
           unique_reviewers=$(echo "$combined_reviewers" | uniq -u | tr '\n' ', ' | sed 's/, $//')
 
           echo "UNIQUE_REVIEWERS : $unique_reviewers"
