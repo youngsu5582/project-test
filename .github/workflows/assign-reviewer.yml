@@ -31,7 +31,7 @@ jobs:
           unique_reviewers=$(echo "$combined_reviewers" | uniq -u | tr '\n' ', ' | sed 's/, $//')
 
           echo "UNIQUE_REVIEWERS : $unique_reviewers"
-          echo "REVIEWERS=$REVIEWERS" >> $GITHUB_ENV
+          echo "REVIEWERS=unique_reviewers" >> $GITHUB_ENV
 
       - name: Backend Label
         uses: wow-actions/auto-assign@v3
