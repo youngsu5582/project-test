@@ -39,4 +39,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           reviewers: ${{ env.REVIEWERS }}
           addAssignees: false
+          addReviewers: true
           includeLabels: BE
