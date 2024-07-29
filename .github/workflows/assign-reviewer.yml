@@ -9,13 +9,19 @@ on:
 jobs:
   assign-reviewer:
     runs-on: ubuntu-latest
+
+
     steps:
+      - name: Set up jq
+        run: sudo apt-get install jq
+
       - name: LOG ASSIGNEE
         run: |
+          echo "RESPONSE :${{ github.event.pull_request }}"
           assignees=$(echo "${{ github.event.pull_request }}" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//' | rev | cut -c 3- | rev)
           
           static_assignees="i894, youngsu5582"
-          combined_reviewers="${static_reviewers}, ${assignees}"
+          combined_reviewers="${static_assignees}, ${assignees}"
           unique_reviewers=$(echo "$combined_reviewers" | uniq -u | tr '\n' ', ' | sed 's/, $//')
           echo "UNIQUE_REVIEWERS : $unique_reviewers"
           
