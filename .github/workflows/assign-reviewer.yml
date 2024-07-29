@@ -19,9 +19,8 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
           echo "EVENT : $GITHUB_CONTEXT"
-#          echo "ARRAY: $array"
-#          assignees=$(echo "${{ github.event.pull_request }}" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//' | rev | cut -c 3- | rev)
-#          echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
+          assignees=$(echo "$GITHUB_CONTEXT" | jq -r '.assignees[].login' | tr '\n' ', ' | sed 's/, $//' | rev | cut -c 3- | rev)
+          echo "ASSIGNEES : $assignees"
 #
 #      - name: LOG ASSIGNEE
 #        run: |
