@@ -72,7 +72,7 @@ jobs:
           reviewers=${{ env.REVIEWERS }}
           IFS=',' read -r -a reviewers_array <<< "$reviewers"
           for reviewer in "${reviewers_array[@]}"; do
-            slack_id=${{ env[reviewer] }}
+            slack_id=${{ env[${reviewer}] }}
             if [ -n "$slack_id" ]; then
               mentions+="<@$slack_id> "
             fi
