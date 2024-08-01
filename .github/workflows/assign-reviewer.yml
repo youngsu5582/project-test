@@ -6,6 +6,16 @@ on:
       - edited
       - labeled
       - unlabeled
+env:
+  youngsu5582: "U07BH9G42AV"
+  jcoding-play: "U07B4G18CUT"
+  hjk0761: "U07BTD41NRE"
+  ashty: "U07B4H81PCK"
+  chlwlstlf: "U07B4GB6V5H"
+  00kang: "U07B1NHUA69"
+  pp449: "U07B1NH5LBX"
+
+
 jobs:
   assign-reviewer:
     runs-on: ubuntu-latest
@@ -24,29 +34,80 @@ jobs:
           echo "ASSIGNEES=$assignees" >> $GITHUB_ENV
           echo "PULL_REQUEST_ID=$pull_request_id" >> $GITHUB_ENV
 
-
-      - name: LOG ASSIGNEE
+      - name: Setup Review Member
+        if: ${{ !env.EXISTED }}
+        id: setup-reviewer
         run: |
-          echo "${{ env.ASSIGNEES }}"
-          static_reviewers="i894, youngsu5582"
-          combined_reviewers=$(echo "$static_reviewers, ${{ env.ASSIGNEES }}" | tr ', ' '\n' | sort)
+          IFS=',' read -r -a LABEL_ARRAY <<< "${{ env.LABELS }}"
+          reviewers=""
+          for LABEL in "${LABEL_ARRAY[@]}"; do
+            if [[ "$LABEL" == "BE" ]]; then
+              reviewers="i894, youngsu5582"
+            elif [[ "$LABEL" == "FE" ]]; then
+              reviewers="00kang, pp449, chlwlstlf"
+            fi
+          done
+          
+          echo "REVIEW_MEMBER=$reviewers" >> $GITHUB_ENV          
+
+      - name: Extract Reviewers
+        run: |
+          combined_reviewers=$(echo "${{ env.REVIEW_MEMBER }}, ${{ env.ASSIGNEES }}" | tr ', ' '\n' | sort)
           echo "COMBINE : $combined_reviewers"
           unique_reviewers=$(echo "$combined_reviewers" | uniq -u | tr '\n' ',' | rev | cut -c 2- | rev)
-
           echo "UNIQUE_REVIEWERS : $unique_reviewers"
           echo "REVIEWERS=$unique_reviewers" >> $GITHUB_ENV
 
-#      - name: Backend Label
-#        uses: wow-actions/auto-assign@v3
-#        with:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          reviewers: ${{ env.REVIEWERS }}
-#          addAssignees: false
-#          addReviewers: true
-#          includeLabels: BE
       - name: Create Pull Request
-        if: ${{ !env.EXISTED }}
+        if: ${{ !env.REVIEW_MEMBER }}
         run: |
           gh pr edit ${{ env.PULL_REQUEST_ID }} --add-reviewer "${{ env.REVIEWERS }}"
         env:
           GH_TOKEN: ${{ github.token }}
+
+      - name: Set reviewers to Slack Id
+        id: set-reviewer
+        if: ${{ !env.REVIEW_MEMBER }}
+        run: |
+          reviewers=${{ env.REVIEWERS }}
+          IFS=',' read -r -a reviewers_array <<< "$reviewers"
+          for reviewer in "${reviewers_array[@]}"; do
+            slack_id=$(eval echo \${{ env[$reviewer] }})
+            if [ -n "$slack_id" ]; then
+              mentions+="<@$slack_id> "
+            fi
+          done
+          echo "REVIEWER_SLACK_IDS=$mentions" >> $GITHUB_ENV
+
+      - name: pr reviewer 되면 slack 알림 보냄
+        uses: slackapi/slack-github-action@v1.24.0
+        if: ${{ !env.REVIEWER_SLACK_IDS }}
+        with:
+          channel-id: ${{ secrets.REVIEW_MENTION_CHANNEL_ID }}
+          payload: |
+            {
+              "text": "PR review request",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ env.REVIEWER_SLACK_IDS }} 들에게 리뷰 요청을 했어요🚀🚀"
+                  }
+                }
+              ],
+              "attachments": [
+                {
+                  "fallback": "[CoReA] New Pull Request",
+                  "color": "#00E000",
+                  "labels": "${{ github.event.pull_request.labels }}",
+                  "title": "${{ github.event.pull_request.title }}",
+                  "title_link": "${{ github.event.pull_request.html_url }}",
+                  "text": "${{ github.event.pull_request.body }}",
+                  "short": true
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_WEBHOOK_URL }}
+

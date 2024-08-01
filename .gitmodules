@@ -1,0 +1,3 @@
+[submodule "module-test/src/main/resources/config"]
+	path = module-test/src/main/resources/config
+	url = https://github.com/youngsu5582/submodule-test.git
