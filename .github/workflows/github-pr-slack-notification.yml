@@ -69,7 +69,6 @@ jobs:
                   "author_name": "${{ github.event.sender.login }}",
                   "title": "${{ github.event.pull_request.title }}",
                   "title_link": "${{ github.event.pull_request.html_url }}",
-                  "text": "${{ github.event.pull_request.body }}",
                   "short": true
                 }
               ]
