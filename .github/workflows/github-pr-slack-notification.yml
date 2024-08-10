@@ -45,6 +45,10 @@ jobs:
             fi
           done
           echo "ASSIGNEES_SLACK_IDS=$mentions" >> $GITHUB_ENV
+      - name: GET BODY
+        run:
+          echo "PR_BODY=$(echo '${{ github.event.pull_request.body }}' | sed ':a;N;$!ba;s/\n/\\n/g')" >> $GITHUB_ENV
+
 
       - name: pr reviewer 되면 slack 알림 보냄
         uses: slackapi/slack-github-action@v1.24.0
@@ -69,7 +73,7 @@ jobs:
                   "author_name": "${{ github.event.sender.login }}",
                   "title": "${{ github.event.pull_request.title }}",
                   "title_link": "${{ github.event.pull_request.html_url }}",
-                  "text": "${{ github.event.pull_request.body | replace('\n', '\\n') }}",
+                  "text": "${{ env.PR_BODY }}",
                   "short": true
                 }
               ]
