@@ -20,7 +20,7 @@ jobs:
           
           mentions=""
 
-          for reviewer in ${{ toJSON(github.event.pull_request.requested_reviewers) }}; do
+          for reviewer in $(echo '${{ toJSON(github.event.pull_request.requested_reviewers) }}' | jq -c '.[]'); do
             # Extract the reviewer's login name
             login=$(echo "$reviewer" | jq -r '.login')
 
@@ -32,7 +32,7 @@ jobs:
           done
           echo "REVIEWER_SLACK_IDS=$mentions" >> $GITHUB_ENV
 
-      - name: Extract REVIEWERS
+      - name: Extract ASSIGNEES
         env:
           PULL_REQUEST_CONTEXT: ${{ toJson(github.event.pull_request) }}
         run: |
@@ -43,7 +43,7 @@ jobs:
           
           mentions=""
 
-          for reviewer in ${{ toJSON(github.event.pull_request.assignees) }}; do
+          for reviewer in $(echo '${{ toJSON(github.event.pull_request.assignees) }}' | jq -c '.[]'); do
             # Extract the reviewer's login name
             login=$(echo "$reviewer" | jq -r '.login')
 
