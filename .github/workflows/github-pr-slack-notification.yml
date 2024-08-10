@@ -34,7 +34,7 @@ jobs:
 
       - name: Extract ASSIGNEES
         run: |
-          slack_ids_json=$(cat slack_id.json)
+          slack_ids_json=$(cat .github/workflows/slack_id.json)
           assignees=$(echo '${{ toJSON(github.event.pull_request.assignees) }}' | jq -c '.[]')
           mentions=""
           for assignee in $assignees; do
