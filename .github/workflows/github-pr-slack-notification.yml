@@ -13,10 +13,7 @@ jobs:
     steps:
       - name: Extract REVIEWERS
         run: |
-          slack_ids_json='{
-            "i894": "U07B4GGQ5EX",
-            "youngsu5582": "U07BH9G42AV",
-          }'
+          slack_ids_json=$(cat slack_id.json)
           
           mentions=""
           for reviewer in "${{ toJSON(github.event.pull_request.requested_reviewers) }}"; do
@@ -32,10 +29,7 @@ jobs:
         env:
           PULL_REQUEST_CONTEXT: ${{ toJson(github.event.pull_request) }}
         run: |
-          slack_ids_json='{
-            "i894": "U07B4GGQ5EX",
-            "youngsu5582": "U07BH9G42AV",
-          }'
+          slack_ids_json=$(cat slack_id.json)
           
           mentions=""
           for reviewer in "${{ toJSON(github.event.pull_request.assignees) }}"; do
