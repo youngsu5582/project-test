@@ -19,20 +19,16 @@ jobs:
           }'
           
           mentions=""
-
-          for reviewer in $(echo '${{ toJSON(github.event.pull_request.requested_reviewers) }}' | jq -c '.[]'); do
+          for reviewer in "${{ toJSON(github.event.pull_request.requested_reviewers) }}"; do
             # Extract the reviewer's login name
             login=$(echo "$reviewer" | jq -r '.login')
-
             slack_id=$(echo "$slack_ids_json" | jq -r --arg login "$login" '.[$login]')
-
             if [ -n "$slack_id" ]; then
               mentions+=" <@$slack_id>"
             fi
           done
           echo "REVIEWER_SLACK_IDS=$mentions" >> $GITHUB_ENV
-
-      - name: Extract ASSIGNEES
+      - name: Extract REVIEWERS
         env:
           PULL_REQUEST_CONTEXT: ${{ toJson(github.event.pull_request) }}
         run: |
@@ -42,20 +38,15 @@ jobs:
           }'
           
           mentions=""
-
-          for reviewer in $(echo '${{ toJSON(github.event.pull_request.assignees) }}' | jq -c '.[]'); do
+          for reviewer in "${{ toJSON(github.event.pull_request.assignees) }}"; do
             # Extract the reviewer's login name
             login=$(echo "$reviewer" | jq -r '.login')
-
             slack_id=$(echo "$slack_ids_json" | jq -r --arg login "$login" '.[$login]')
-
             if [ -n "$slack_id" ]; then
               mentions+=" <@$slack_id>"
             fi
           done
-          echo "ASSIGNEES_SLACK_IDS=$mentions" >> $GITHUB_ENV          
-
-
+          echo "ASSIGNEES_SLACK_IDS=$mentions" >> $GITHUB_ENV
       - name: pr reviewer 되면 slack 알림 보냄
         uses: slackapi/slack-github-action@v1.24.0
         with:
