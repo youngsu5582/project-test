@@ -63,7 +63,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                     "text": "${{ env.ASSIGNEES_SLACK_IDS}}가 \n${{env.REVIEWER_SLACK_IDS}} 들에게 리뷰 요청을 했어요🚀🚀 \n 링크 : <${{ github.event.pull_request.title }} | ${{ github.event.pull_request.html_url }}>"
+                     "text": "${{ env.ASSIGNEES_SLACK_IDS}}이 \n${{env.REVIEWER_SLACK_IDS}} 들에게 리뷰 요청을 했어요🚀🚀 \n 링크 : <${{ github.event.pull_request.title }}|${{ github.event.pull_request.html_url }}>"
                   }
                 }
               ]
