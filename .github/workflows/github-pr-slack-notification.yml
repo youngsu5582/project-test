@@ -7,31 +7,54 @@ on:
     types:
       - review_requested
 
-env:
-  youngsu5582: "U07BH9G42AV"
-  jcoding-play: "U07B4G18CUT"
-  hjk0761: "U07BTD41NRE"
-  ashty: "U07B4H81PCK"
-  chlwlstlf: "U07B4GB6V5H"
-  00kang: "U07B1NHUA69"
-  pp449: "U07B1NH5LBX"
-
 jobs:
   specific_review_requested:
     runs-on: ubuntu-latest
     steps:
-      - name: Set reviewers and sender variables
-        id: set-vars
+      - name: Extract REVIEWERS
         run: |
+          slack_ids_json='{
+            "i894": "U07B4GGQ5EX",
+            "youngsu5582": "U07BH9G42AV",
+          }'
+          
           mentions=""
-          for reviewer in "${{github.event.pull_request.requested_reviewers}}"; do
-            slack_id=${{ env[reviewer.login] }}
+
+          for reviewer in ${{ toJSON(github.event.pull_request.requested_reviewers) }}; do
+            # Extract the reviewer's login name
+            login=$(echo "$reviewer" | jq -r '.login')
+
+            slack_id=$(echo "$slack_ids_json" | jq -r --arg login "$login" '.[$login]')
+
             if [ -n "$slack_id" ]; then
               mentions+=" <@$slack_id>"
             fi
           done
           echo "REVIEWER_SLACK_IDS=$mentions" >> $GITHUB_ENV
-          echo "SENDER_SLACK_ID=${{ env.github.event.pull_request.user.login }}" >> $GITHUB_ENV
+
+      - name: Extract REVIEWERS
+        env:
+          PULL_REQUEST_CONTEXT: ${{ toJson(github.event.pull_request) }}
+        run: |
+          slack_ids_json='{
+            "i894": "U07B4GGQ5EX",
+            "youngsu5582": "U07BH9G42AV",
+          }'
+          
+          mentions=""
+
+          for reviewer in ${{ toJSON(github.event.pull_request.assignees) }}; do
+            # Extract the reviewer's login name
+            login=$(echo "$reviewer" | jq -r '.login')
+
+            slack_id=$(echo "$slack_ids_json" | jq -r --arg login "$login" '.[$login]')
+
+            if [ -n "$slack_id" ]; then
+              mentions+=" <@$slack_id>"
+            fi
+          done
+          echo "ASSIGNEES_SLACK_IDS=$mentions" >> $GITHUB_ENV          
+
 
       - name: pr reviewer 되면 slack 알림 보냄
         uses: slackapi/slack-github-action@v1.24.0
@@ -45,7 +68,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "<@${{ env.SENDER_SLACK_ID }}>가 \n ${{ env.REVIEWER_SLACK_IDS }} 들에게 리뷰 요청을 했어요🚀🚀"
+                    "text": "<@${{ env.ASSIGNEES_SLACK_IDS }}>가 \n ${{ env.REVIEWER_SLACK_IDS }} 들에게 리뷰 요청을 했어요🚀🚀"
                   }
                 }
               ],
