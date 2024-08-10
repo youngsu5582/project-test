@@ -11,6 +11,9 @@ jobs:
   specific_review_requested:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository content
+        uses: actions/checkout@v3
+    steps:
       - name: List files in the current directory
         run: ls -al
 
