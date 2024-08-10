@@ -11,9 +11,12 @@ jobs:
   specific_review_requested:
     runs-on: ubuntu-latest
     steps:
+      - name: List files in the current directory
+        run: ls -al
+
       - name: Extract REVIEWERS
         run: |
-          slack_ids_json=$(cat ./slack_id.json)
+          slack_ids_json=$(cat .github/workflows/slack_id.json)
           
           mentions=""
           for reviewer in "${{ toJSON(github.event.pull_request.requested_reviewers) }}"; do
