@@ -46,6 +46,10 @@ jobs:
           done
           echo "ASSIGNEES_SLACK_IDS=$mentions" >> $GITHUB_ENV
 
+      - name: Convert newlines in PR body
+        run: |
+          echo "${{ github.event.pull_request.body }}" | sed ':a;N;$!ba;s/\n/\\n/g' > pr_body.txt
+
       - name: pr reviewer 되면 slack 알림 보냄
         uses: slackapi/slack-github-action@v1.24.0
         with:
@@ -58,7 +62,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                     "text": "${{ env.ASSIGNEES_SLACK_IDS}}가 \n ${{env.REVIEWER_SLACK_IDS}} 들에게 리뷰 요청을 했어요🚀🚀"
+                     "text": "${{ env.ASSIGNEES_SLACK_IDS}}가 \n${{env.REVIEWER_SLACK_IDS}} 들에게 리뷰 요청을 했어요🚀🚀"
                   }
                 }
               ],
@@ -69,7 +73,7 @@ jobs:
                   "author_name": "${{ github.event.sender.login }}",
                   "title": "${{ github.event.pull_request.title }}",
                   "title_link": "${{ github.event.pull_request.html_url }}",
-                  "text": "${{ github.event.pull_request.body }}",
+                  "text": "$(cat pr_body.txt)",
                   "short": true
                 }
               ]
