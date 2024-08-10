@@ -47,7 +47,7 @@ jobs:
           echo "ASSIGNEES_SLACK_IDS=$mentions" >> $GITHUB_ENV
       - name: GET BODY
         run:
-          echo "PR_BODY=$(echo '${{ github.event.pull_request.body }}' | sed ':a;N;$!ba;s/\n/\\n/g')" >> $GITHUB_ENV
+          echo "PR_BODY=$(echo '${{ github.event.pull_request.body }}' | tr '\n' '\\n')" >> $GITHUB_ENV
 
 
       - name: pr reviewer 되면 slack 알림 보냄
@@ -62,7 +62,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                     "text": "${{ env.ASSIGNEES_SLACK_IDS}}가 \n ${{env.REVIEWER_SLACK_IDS}} 들에게 리뷰 요청을 했어요🚀🚀"
+                     "text": "${{ env.ASSIGNEES_SLACK_IDS}}가 \\n ${{env.REVIEWER_SLACK_IDS}} 들에게 리뷰 요청을 했어요🚀🚀"
                   }
                 }
               ],
