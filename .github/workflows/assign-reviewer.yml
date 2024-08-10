@@ -6,15 +6,6 @@ on:
       - edited
       - labeled
       - unlabeled
-env:
-  youngsu5582: "U07BH9G42AV"
-  jcoding-play: "U07B4G18CUT"
-  hjk0761: "U07BTD41NRE"
-  ashty: "U07B4H81PCK"
-  chlwlstlf: "U07B4GB6V5H"
-  00kang: "U07B1NHUA69"
-  pp449: "U07B1NH5LBX"
-
 
 jobs:
   assign-reviewer:
@@ -43,8 +34,6 @@ jobs:
           for LABEL in "${LABEL_ARRAY[@]}"; do
             if [[ "$LABEL" == "BE" ]]; then
               reviewers="i894, youngsu5582"
-            elif [[ "$LABEL" == "FE" ]]; then
-              reviewers="00kang, pp449, chlwlstlf"
             fi
           done
           
@@ -64,50 +53,3 @@ jobs:
           gh pr edit ${{ env.PULL_REQUEST_ID }} --add-reviewer "${{ env.REVIEWERS }}"
         env:
           GH_TOKEN: ${{ github.token }}
-
-      - name: Set reviewers to Slack Id
-        id: set-reviewer
-        if: ${{ !env.REVIEW_MEMBER }}
-        run: |
-          reviewers=${{ env.REVIEWERS }}
-          IFS=',' read -r -a reviewers_array <<< "$reviewers"
-          for reviewer in "${reviewers_array[@]}"; do
-            slack_id=$(eval echo \${{ env[$reviewer] }})
-            if [ -n "$slack_id" ]; then
-              mentions+="<@$slack_id> "
-            fi
-          done
-          echo "REVIEWER_SLACK_IDS=$mentions" >> $GITHUB_ENV
-
-      - name: pr reviewer 되면 slack 알림 보냄
-        uses: slackapi/slack-github-action@v1.24.0
-        if: ${{ !env.REVIEWER_SLACK_IDS }}
-        with:
-          channel-id: ${{ secrets.REVIEW_MENTION_CHANNEL_ID }}
-          payload: |
-            {
-              "text": "PR review request",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "${{ env.REVIEWER_SLACK_IDS }} 들에게 리뷰 요청을 했어요🚀🚀"
-                  }
-                }
-              ],
-              "attachments": [
-                {
-                  "fallback": "[CoReA] New Pull Request",
-                  "color": "#00E000",
-                  "labels": "${{ github.event.pull_request.labels }}",
-                  "title": "${{ github.event.pull_request.title }}",
-                  "title_link": "${{ github.event.pull_request.html_url }}",
-                  "text": "${{ github.event.pull_request.body }}",
-                  "short": true
-                }
-              ]
-            }
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_WEBHOOK_URL }}
-
