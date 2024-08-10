@@ -63,19 +63,8 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                     "text": "${{ env.ASSIGNEES_SLACK_IDS}}가 \n${{env.REVIEWER_SLACK_IDS}} 들에게 리뷰 요청을 했어요🚀🚀"
+                     "text": "${{ env.ASSIGNEES_SLACK_IDS}}가 \n${{env.REVIEWER_SLACK_IDS}} 들에게 리뷰 요청을 했어요🚀🚀 \n 링크 : <${{ github.event.pull_request.title }} | ${{ github.event.pull_request.html_url }}>"
                   }
-                }
-              ],
-              "attachments": [
-                {
-                  "fallback": "[CoReA] New Pull Request",
-                  "color": "#00E000",
-                  "author_name": "${{ github.event.sender.login }}",
-                  "title": "${{ github.event.pull_request.title }}",
-                  "title_link": "${{ github.event.pull_request.html_url }}",
-                  "text": "${{ env.PR_BODY }}",
-                  "short": true
                 }
               ]
             }
