@@ -52,8 +52,8 @@ jobs:
           channel-id: ${{ secrets.REVIEW_MENTION_CHANNEL_ID }}
           payload: |
             {
-              "text": "PR review request",
-              "blocks": [
+              "text": "PR 리뷰 요청이 도착했어요!",
+              "blocks": [ 
                 {
                   "type": "section",
                   "text": {
