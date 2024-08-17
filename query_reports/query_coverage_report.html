@@ -1,0 +1,61 @@
+<html><head><meta charset='UTF-8'><title>쿼리 실행 결과 보고서</title></head>
+<body><h1>쿼리 실행 결과 보고서</h1>
+<p>총 실행 메소드: 19</p>
+<p>초과 메소드 비율(초과 / 정상): 0.00%</p>
+<h2>명세서: corea.auth.controller.LoginController</h2>
+<table border='1'><tr><th>Method</th><th>INSERT</th><th>SELECT</th><th>UPDATE</th><th>DELETE</th><th>Total</th></tr>
+<tr><td><a href='corea.auth.controller.LoginController/logout.html'>logout</a></td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+</table>
+<h2>명세서: corea.feedback.controller.DevelopFeedbackController</h2>
+<table border='1'><tr><th>Method</th><th>INSERT</th><th>SELECT</th><th>UPDATE</th><th>DELETE</th><th>Total</th></tr>
+<tr><td><a href='corea.feedback.controller.DevelopFeedbackController/update.html'>update</a></td><td>0</td><td>3</td><td>1</td><td>0</td><td>4</td></tr>
+</table>
+<h2>명세서: corea.feedback.controller.SocialFeedbackController</h2>
+<table border='1'><tr><th>Method</th><th>INSERT</th><th>SELECT</th><th>UPDATE</th><th>DELETE</th><th>Total</th></tr>
+</table>
+<h2>명세서: corea.feedback.controller.UserFeedbackController</h2>
+<table border='1'><tr><th>Method</th><th>INSERT</th><th>SELECT</th><th>UPDATE</th><th>DELETE</th><th>Total</th></tr>
+<tr><td><a href='corea.feedback.controller.UserFeedbackController/receivedFeedback.html'>receivedFeedback</a></td><td>0</td><td>9</td><td>0</td><td>0</td><td>9</td></tr>
+<tr><td><a href='corea.feedback.controller.UserFeedbackController/deliveredFeedback.html'>deliveredFeedback</a></td><td>0</td><td>8</td><td>0</td><td>0</td><td>8</td></tr>
+</table>
+<h2>명세서: corea.matching.controller.MatchingController</h2>
+<table border='1'><tr><th>Method</th><th>INSERT</th><th>SELECT</th><th>UPDATE</th><th>DELETE</th><th>Total</th></tr>
+</table>
+<h2>명세서: corea.participation.controller.ParticipationController</h2>
+<table border='1'><tr><th>Method</th><th>INSERT</th><th>SELECT</th><th>UPDATE</th><th>DELETE</th><th>Total</th></tr>
+</table>
+<h2>명세서: corea.profile.controller.ProfileController</h2>
+<table border='1'><tr><th>Method</th><th>INSERT</th><th>SELECT</th><th>UPDATE</th><th>DELETE</th><th>Total</th></tr>
+<tr><td><a href='corea.profile.controller.ProfileController/profile.html'>profile</a></td><td>0</td><td>4</td><td>0</td><td>0</td><td>4</td></tr>
+</table>
+<h2>명세서: corea.ranking.controller.RankingController</h2>
+<table border='1'><tr><th>Method</th><th>INSERT</th><th>SELECT</th><th>UPDATE</th><th>DELETE</th><th>Total</th></tr>
+<tr><td><a href='corea.ranking.controller.RankingController/findTopRankingsSortByClassification.html'>findTopRankingsSortByClassification</a></td><td>0</td><td>4</td><td>0</td><td>0</td><td>4</td></tr>
+</table>
+<h2>명세서: corea.review.controller.ReviewController</h2>
+<table border='1'><tr><th>Method</th><th>INSERT</th><th>SELECT</th><th>UPDATE</th><th>DELETE</th><th>Total</th></tr>
+<tr><td><a href='corea.review.controller.ReviewController/complete.html'>complete</a></td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+</table>
+<h2>명세서: corea.room.controller.RoomController</h2>
+<table border='1'><tr><th>Method</th><th>INSERT</th><th>SELECT</th><th>UPDATE</th><th>DELETE</th><th>Total</th></tr>
+<tr><td><a href='corea.room.controller.RoomController/create.html'>create</a></td><td>2</td><td>1</td><td>0</td><td>0</td><td>3</td></tr>
+<tr><td><a href='corea.room.controller.RoomController/room.html'>room</a></td><td>0</td><td>3</td><td>0</td><td>0</td><td>3</td></tr>
+<tr><td><a href='corea.room.controller.RoomController/participatedRooms.html'>participatedRooms</a></td><td>0</td><td>9</td><td>0</td><td>0</td><td>9</td></tr>
+<tr><td><a href='corea.room.controller.RoomController/closedRooms.html'>closedRooms</a></td><td>0</td><td>2</td><td>0</td><td>0</td><td>2</td></tr>
+<tr><td><a href='corea.room.controller.RoomController/openedRooms.html'>openedRooms</a></td><td>0</td><td>2</td><td>0</td><td>0</td><td>2</td></tr>
+<tr><td><a href='corea.room.controller.RoomController/reviewers.html'>reviewers</a></td><td>0</td><td>5</td><td>0</td><td>0</td><td>5</td></tr>
+<tr><td><a href='corea.room.controller.RoomController/reviewees.html'>reviewees</a></td><td>0</td><td>5</td><td>0</td><td>0</td><td>5</td></tr>
+</table>
+<h2>명세서와 일치하지 않는 메소드</h2>
+<ul>
+<li>corea.auth.controller.LoginController - extendAuthorization (실행된 매개변수: [TokenRefreshRequest[refreshToken=O1234567COREAREFRESH]], 에러: corea.exception.CoreaException: 토큰이 올바르지 않습니다.)</li>
+<br><li>corea.auth.controller.LoginController - login (실행된 매개변수: [LoginRequest[code=4csdf1234asdf]], 에러: org.springframework.web.client.HttpClientErrorException$MethodNotAllowed: 405 Method Not Allowed: "<html><EOL><head><title>405 Not Allowed</title></head><EOL><body bgcolor="white"><EOL><center><h1>405 Not Allowed</h1></center><EOL></body><EOL></html>")</li>
+<br><li>corea.feedback.controller.DevelopFeedbackController - create (실행된 매개변수: [1, corea.auth.domain.AuthInfo@5df737e1, RoomCreateRequest[title=MVC를 아시나요?, content=MVC 패턴을 아시나요?, repositoryLink=https://github.com/example/java-racingcar, thumbnailLink=https://gongu.copyright.or.kr/gongu/wrt/cmmn/wrtFileImageView.do?wrtSn=13301655&filePath=L2Rpc2sxL25ld2RhdGEvMjAyMS8yMS9DTFMxMDAwNC8xMzMwMTY1NV9XUlRfMjFfQ0xTMTAwMDRfMjAyMTEyMTNfMQ==&thumbAt=Y&thumbSe=b_tbumb&wrtTy=10004, matchingSize=2, keyword=[TDD, 클린코드], limitedParticipantsSize=200, recruitmentDeadline=2024-07-30T15:00, reviewDeadline=2024-08-10T23:59, classification=BACKEND]], 에러: corea.exception.CoreaException: 매칭된 인원들이 아닙니다.)</li>
+<br><li>corea.feedback.controller.DevelopFeedbackController - developFeedback (실행된 매개변수: [1, ashsty, corea.auth.domain.AuthInfo@5df737e1], 에러: org.springframework.dao.IncorrectResultSizeDataAccessException: Query did not return a unique result: 2 results were returned)</li>
+<br><li>corea.feedback.controller.SocialFeedbackController - update (실행된 매개변수: [1, 2, corea.auth.domain.AuthInfo@5df737e1, SocialFeedbackRequest[receiverId=2, evaluationPoint=4, feedbackKeywords=[이해가 잘 되게 설명을 잘해줘요(못해줘요), 도움이 되었어요(아니에요)], feedbackText=말투가 너무 날카로운 것 같아요. ...]], 에러: corea.exception.CoreaException: 매칭된 인원들이 아닙니다.)</li>
+<br><li>corea.feedback.controller.SocialFeedbackController - create (실행된 매개변수: [1, corea.auth.domain.AuthInfo@5df737e1, RoomCreateRequest[title=MVC를 아시나요?, content=MVC 패턴을 아시나요?, repositoryLink=https://github.com/example/java-racingcar, thumbnailLink=https://gongu.copyright.or.kr/gongu/wrt/cmmn/wrtFileImageView.do?wrtSn=13301655&filePath=L2Rpc2sxL25ld2RhdGEvMjAyMS8yMS9DTFMxMDAwNC8xMzMwMTY1NV9XUlRfMjFfQ0xTMTAwMDRfMjAyMTEyMTNfMQ==&thumbAt=Y&thumbSe=b_tbumb&wrtTy=10004, matchingSize=2, keyword=[TDD, 클린코드], limitedParticipantsSize=200, recruitmentDeadline=2024-07-30T15:00, reviewDeadline=2024-08-10T23:59, classification=BACKEND]], 에러: corea.exception.CoreaException: 매칭된 인원들이 아닙니다.)</li>
+<br><li>corea.feedback.controller.SocialFeedbackController - socialFeedback (실행된 매개변수: [1, youngsu5582, corea.auth.domain.AuthInfo@5df737e1], 에러: corea.exception.CoreaException: 피드백을 찾을 수 없습니다.)</li>
+<br><li>corea.matching.controller.MatchingController - matching (실행된 매개변수: [1, corea.auth.domain.AuthInfo@5df737e1], 에러: corea.exception.CoreaException: 참여 인원 수가 부족합니다.)</li>
+<br><li>corea.participation.controller.ParticipationController - participate (실행된 매개변수: [1, corea.auth.domain.AuthInfo@5df737e1], 에러: corea.exception.CoreaException: 해당 방에 이미 참여했습니다.)</li>
+<br></ul>
+</body></html>
