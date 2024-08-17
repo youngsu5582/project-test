@@ -1,0 +1,10 @@
+<html><head><meta charset='UTF-8'><title>Method Query Report</title></head>
+<body><h1>corea.room.controller.RoomController.participatedRooms - 실행된 쿼리</h1>
+<p><strong>같이 실행된 파라미터:</strong> [corea.auth.domain.AuthInfo@5df737e1]</p>
+<ul>
+<li>select r1_0.id,r1_0.classification,r1_0.content,r1_0.current_participants_size,r1_0.keyword,r1_0.limited_participants_size,r1_0.manager_id,r1_0.matching_size,r1_0.recruitment_deadline,r1_0.repository_link,r1_0.review_deadline,r1_0.status,r1_0.thumbnail_link,r1_0.title from room r1_0 where r1_0.id=? : 5</li>
+<li>select m1_0.id,m1_0.email,m1_0.github_user_id,m1_0.is_email_accepted,m1_0.name,m1_0.profile_link,m1_0.thumbnail_url,m1_0.username from member m1_0 where m1_0.id=? : 3</li>
+<li>select p1_0.id,p1_0.member_github_id,p1_0.member_id,p1_0.room_id from participation p1_0 where p1_0.member_id=? : 1</li>
+</ul>
+<a href='../query_coverage_report.html'>Back to Summary</a>
+</body></html>
