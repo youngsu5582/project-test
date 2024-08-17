@@ -27,6 +27,12 @@ jobs:
           name: html-report
           path: query_reports/query_coverage_report.html
 
+      - name: Debugging
+        run: |
+          ls -al
+          pwd
+          ls -al query_reports
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
