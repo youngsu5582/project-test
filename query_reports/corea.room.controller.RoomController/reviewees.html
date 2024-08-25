@@ -1,0 +1,11 @@
+<html><head><meta charset='UTF-8'><title>Method Query Report</title></head>
+<body><h1>corea.room.controller.RoomController.reviewees - 실행된 쿼리</h1>
+<p><strong>같이 실행된 파라미터:</strong> [1, corea.auth.domain.AuthInfo@5df737e1]</p>
+<ul>
+<li>select count(*) from room r1_0 where r1_0.id=? : 1</li>
+<li>select m1_0.id,m1_0.email,m1_0.github_user_id,m1_0.is_email_accepted,m1_0.name,m1_0.profile_link,m1_0.thumbnail_url,m1_0.username from member m1_0 where m1_0.id=? : 2</li>
+<li>select mr1_0.id,mr1_0.is_reviewee_completed_feedback,mr1_0.is_reviewer_completed_feedback,mr1_0.pr_link,mr1_0.review_status,mr1_0.reviewee_id,mr1_0.reviewer_id,mr1_0.room_id from match_result mr1_0 where mr1_0.reviewer_id=? and mr1_0.room_id=? : 1</li>
+<li>select count(*) from member m1_0 where m1_0.id=? : 1</li>
+</ul>
+<a href='../query_coverage_report.html'>Back to Summary</a>
+</body></html>
