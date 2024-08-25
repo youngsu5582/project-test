@@ -1,0 +1,11 @@
+<html><head><meta charset='UTF-8'><title>Method Query Report</title></head>
+<body><h1>corea.feedback.controller.DevelopFeedbackController.create - 실행된 쿼리</h1>
+<p><strong>같이 실행된 파라미터:</strong> [1, corea.auth.domain.AuthInfo@5df737e1, RoomCreateRequest[title=MVC를 아시나요?, content=MVC 패턴을 아시나요?, repositoryLink=https://github.com/example/java-racingcar, thumbnailLink=https://gongu.copyright.or.kr/gongu/wrt/cmmn/wrtFileImageView.do?wrtSn=13301655&filePath=L2Rpc2sxL25ld2RhdGEvMjAyMS8yMS9DTFMxMDAwNC8xMzMwMTY1NV9XUlRfMjFfQ0xTMTAwMDRfMjAyMTEyMTNfMQ==&thumbAt=Y&thumbSe=b_tbumb&wrtTy=10004, matchingSize=2, keyword=[TDD, 클린코드], limitedParticipantsSize=200, recruitmentDeadline=2024-07-30T15:00, reviewDeadline=2024-08-10T23:59, classification=BACKEND]]</p>
+<p><strong>에러:</strong> corea.exception.CoreaException: 매칭된 인원들이 아닙니다.</p>
+<ul>
+<li>insert into participation (member_github_id,member_id,room_id,id) values (?,?,?,default) : 1</li>
+<li>select m1_0.id,m1_0.email,m1_0.github_user_id,m1_0.is_email_accepted,m1_0.name,m1_0.profile_link,m1_0.thumbnail_url,m1_0.username from member m1_0 where m1_0.id=? : 1</li>
+<li>insert into room (classification,content,current_participants_size,keyword,limited_participants_size,manager_id,matching_size,recruitment_deadline,repository_link,review_deadline,status,thumbnail_link,title,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,default) : 1</li>
+</ul>
+<a href='../query_coverage_report.html'>Back to Summary</a>
+</body></html>

@@ -1,0 +1,12 @@
+<html><head><meta charset='UTF-8'><title>Method Query Report</title></head>
+<body><h1>corea.feedback.controller.SocialFeedbackController.update - 실행된 쿼리</h1>
+<p><strong>같이 실행된 파라미터:</strong> [1, 2, corea.auth.domain.AuthInfo@5df737e1, SocialFeedbackRequest[receiverId=2, evaluationPoint=4, feedbackKeywords=[이해가 잘 되게 설명을 잘해줘요(못해줘요), 도움이 되었어요(아니에요)], feedbackText=말투가 너무 날카로운 것 같아요. ...]]</p>
+<p><strong>에러:</strong> corea.exception.CoreaException: 매칭된 인원들이 아닙니다.</p>
+<ul>
+<li>select count(*) from develop_feedback df1_0 where df1_0.id=? : 1</li>
+<li>select df1_0.id,df1_0.deliver_id,df1_0.evaluate_point,df1_0.feed_back_text,df1_0.keywords,df1_0.receiver_id,df1_0.recommendation_point,df1_0.room_id from develop_feedback df1_0 where df1_0.id=? : 1</li>
+<li>update develop_feedback set deliver_id=?,evaluate_point=?,feed_back_text=?,keywords=?,receiver_id=?,recommendation_point=?,room_id=? where id=? : 1</li>
+<li>select mr1_0.id,mr1_0.is_reviewee_completed_feedback,mr1_0.is_reviewer_completed_feedback,mr1_0.pr_link,mr1_0.review_status,mr1_0.reviewee_id,mr1_0.reviewer_id,mr1_0.room_id from match_result mr1_0 where mr1_0.room_id=? and mr1_0.reviewer_id=? and mr1_0.reviewee_id=? : 1</li>
+</ul>
+<a href='../query_coverage_report.html'>Back to Summary</a>
+</body></html>

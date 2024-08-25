@@ -1,0 +1,51 @@
+name: Backend CI
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - edited
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'zulu'
+
+      - name: Run Tests and Generate HTML Report
+        run: |
+          # Assuming the HTML report is generated here
+          # For example, with a command like: ./gradlew test
+          ./gradlew test
+
+      - name: Upload HTML report as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: html-report
+          path: query_reports/query_coverage_report.html
+
+      - name: Debugging
+        run: |
+          echo "Listing files in the root directory:"
+          ls -al
+          echo "Listing files in the project-test directory:"
+          ls -al /home/runner/work/project-test/project-test
+          echo "Listing files in the query_reports directory:"
+          ls -al /home/runner/work/project-test/project-test/query_reports
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: query_reports
+
